@@ -2,7 +2,7 @@
 
 module.exports = app => {
   const { BIGINT, DATE, STRING, INTEGER, TEXT } = app.Sequelize;
-  const Model = app.model.define('lesson_d', {
+  const Model = app.model.define('lessons', {
     id: {
       type: BIGINT,
       autoIncrement: true,
@@ -10,6 +10,7 @@ module.exports = app => {
     },
     dKey: {
       type: STRING(64),
+      allowNull: false,
     },
     userId: { // user dimension
       type: BIGINT,

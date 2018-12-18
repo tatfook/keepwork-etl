@@ -1,15 +1,12 @@
 'use strict';
 
 module.exports = app => {
-  const { BIGINT, DATE, TEXT, INTEGER, STRING } = app.Sequelize;
-  const Model = app.model.define('question_d', {
+  const { BIGINT, DATE, TEXT, INTEGER } = app.Sequelize;
+  const Model = app.model.define('questions', {
     id: {
       type: BIGINT,
       autoIncrement: true,
       primaryKey: true,
-    },
-    dKey: {
-      type: STRING(64),
     },
     lessonId: { // lesson dimension
       type: BIGINT,

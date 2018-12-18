@@ -3,7 +3,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const { INTEGER, SMALLINT, DATE, STRING } = Sequelize;
-    await queryInterface.createTable('time_d', {
+    await queryInterface.createTable('times', {
       id: {
         type: INTEGER,
         autoIncrement: true,
@@ -49,13 +49,13 @@ module.exports = {
       underscored: false,
     });
 
-    await queryInterface.addIndex('time_d', { fields: [ 'date' ] });
-    await queryInterface.addIndex('time_d', { fields: [ 'year', 'month', 'day' ] });
-    await queryInterface.addIndex('time_d', { fields: [ 'year', 'quarter' ] });
-    await queryInterface.addIndex('time_d', { fields: [ 'year', 'dayOfWeek' ] });
+    await queryInterface.addIndex('times', { fields: [ 'date' ] });
+    await queryInterface.addIndex('times', { fields: [ 'year', 'month', 'day' ] });
+    await queryInterface.addIndex('times', { fields: [ 'year', 'quarter' ] });
+    await queryInterface.addIndex('times', { fields: [ 'year', 'dayOfWeek' ] });
   },
 
   down: queryInterface => {
-    return queryInterface.dropTable('time_d');
+    return queryInterface.dropTable('times');
   },
 };

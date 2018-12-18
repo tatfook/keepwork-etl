@@ -5,12 +5,12 @@ CREATE PROCEDURE timedimbuild ()
 BEGIN
     DECLARE v_date DATE;
 
-    DELETE FROM time_d;
+    DELETE FROM times;
 
     SET v_date = "2018-01-01";
     WHILE v_date < "2028-12-31" DO
 
-        INSERT INTO time_d (
+        INSERT INTO times (
             id,
             date,
             year,

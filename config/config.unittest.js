@@ -1,9 +1,10 @@
 'use strict';
 
 // change to your own sequelize configurations for test
-// exports.sequelize = {
-//   dialect: 'mysql',
-//   hostname: '127.0.0.1',
-//   port: 3306,
-//   database: 'egg-sequelize-unittest',
-// };
+exports.sequelize = {
+  username: 'root',
+  password: null,
+  database: 'kpdataware-test',
+  host: '127.0.0.1',
+  port: 3306,
+};

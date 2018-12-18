@@ -3,7 +3,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const { BIGINT, SMALLINT, INTEGER, DATE, STRING } = Sequelize;
-    await queryInterface.createTable('user_d', {
+    await queryInterface.createTable('users', {
       id: {
         type: BIGINT,
         autoIncrement: true,
@@ -11,6 +11,7 @@ module.exports = {
       },
       dKey: {
         type: STRING(64),
+        allowNull: false,
       },
       email: {
         type: STRING(64),
@@ -46,13 +47,13 @@ module.exports = {
       underscored: false,
     });
 
-    await queryInterface.addIndex('user_d', { fields: [ 'dKey' ] });
-    await queryInterface.addIndex('user_d', { fields: [ 'email', 'mobile', 'authPhone' ], name: 'indexOfContactInfo' });
-    await queryInterface.addIndex('user_d', { fields: [ 'registerAt', 'age', 'gender' ], name: 'indexOfUserInfo' });
+    await queryInterface.addIndex('users', { fields: [ 'dKey' ] });
+    await queryInterface.addIndex('users', { fields: [ 'email', 'mobile', 'authPhone' ], name: 'indexOfContactInfo' });
+    await queryInterface.addIndex('users', { fields: [ 'registerAt', 'age', 'gender' ], name: 'indexOfUserInfo' });
 
   },
 
   down: queryInterface => {
-    return queryInterface.dropTable('user_d');
+    return queryInterface.dropTable('users');
   },
 };

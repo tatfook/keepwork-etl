@@ -2,7 +2,7 @@
 
 module.exports = app => {
   const { INTEGER, SMALLINT, DATE, STRING } = app.Sequelize;
-  const Model = app.model.define('time_d', {
+  const Model = app.model.define('times', {
     id: {
       type: INTEGER,
       autoIncrement: true,

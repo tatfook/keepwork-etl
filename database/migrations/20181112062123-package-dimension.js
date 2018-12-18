@@ -3,7 +3,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const { BIGINT, SMALLINT, INTEGER, DATE, STRING } = Sequelize;
-    await queryInterface.createTable('package_d', {
+    await queryInterface.createTable('packages', {
       id: {
         type: BIGINT,
         autoIncrement: true,
@@ -11,6 +11,7 @@ module.exports = {
       },
       dKey: {
         type: STRING(64),
+        allowNull: false,
       },
       name: {
         type: STRING(64),
@@ -46,14 +47,14 @@ module.exports = {
       underscored: false,
     });
 
-    await queryInterface.addIndex('package_d', { fields: [ 'dKey' ] });
-    await queryInterface.addIndex('package_d', { fields: [ 'price', 'minAge', 'maxAge', 'lessonCount' ], name: 'indexOfPackageInfo' });
-    await queryInterface.addIndex('package_d', { fields: [ 'createdAt', 'updatedAt' ], name: 'indexOfTime' });
-    await queryInterface.addIndex('package_d', { fields: [ 'subjectId', 'subjectName' ], name: 'indexOfSubject' });
+    await queryInterface.addIndex('packages', { fields: [ 'dKey' ] });
+    await queryInterface.addIndex('packages', { fields: [ 'price', 'minAge', 'maxAge', 'lessonCount' ], name: 'indexOfPackageInfo' });
+    await queryInterface.addIndex('packages', { fields: [ 'createdAt', 'updatedAt' ], name: 'indexOfTime' });
+    await queryInterface.addIndex('packages', { fields: [ 'subjectId', 'subjectName' ], name: 'indexOfSubject' });
 
   },
 
   down: queryInterface => {
-    return queryInterface.dropTable('package_d');
+    return queryInterface.dropTable('packages');
   },
 };
