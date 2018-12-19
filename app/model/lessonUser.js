@@ -3,7 +3,6 @@ const _ = require('lodash');
 
 module.exports = app => {
   const { BIGINT, DATE, STRING } = app.Sequelize;
-  const { Op } = app.Sequelize;
   const Model = app.model.define('lesson_users', {
     id: {
       type: BIGINT,
@@ -39,9 +38,25 @@ module.exports = app => {
     const params = _.pick(data, [ 'id', 'userId', 'role' ]);
     params.dKey = params.id;
     _.omit(params, [ 'id' ]);
-    const user = await app.model.User.findLast({ where: { dKey: { [Op.eq]: params.userId } } });
+    const user = await app.model.User.findOne({ where: { dKey: params.userId }, order: [[ 'id', 'DESC' ]] });
     params.userId = user.id;
     return app.model.LessonUser.create(params);
+  };
+
+  Model.updateFromEvent = async data => {
+    const params = _.pick(data, [ 'role' ]);
+    const instance = await app.model.LessonUser.findOne({ where: { dKey: data.id }, order: [[ 'id', 'DESC' ]] });
+    return instance.update(params);
+  };
+
+  Model.upsertFromEvent = async data => {
+    if (!data.id) throw new Error('Id cannot be null');
+    try {
+      await app.model.LessonUser.updateFromEvent(data);
+    } catch (e) {
+      await app.model.LessonUser.createFromEvent(data);
+    }
+    return app.model.LessonUser.findOne({ where: { dKey: data.id }, order: [[ 'id', 'DESC' ]] });
   };
 
   return Model;

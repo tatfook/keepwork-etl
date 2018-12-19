@@ -18,6 +18,7 @@ module.exports = {
       },
       userId: {
         type: BIGINT,
+        allowNull: false,
       },
       subjectId: {
         type: BIGINT,

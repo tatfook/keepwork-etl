@@ -1,4 +1,5 @@
 'use strict';
+const _ = require('lodash');
 
 module.exports = app => {
   const { BIGINT, DATE, STRING, INTEGER, TEXT } = app.Sequelize;
@@ -14,6 +15,7 @@ module.exports = app => {
     },
     userId: { // user dimension
       type: BIGINT,
+      allowNull: false,
     },
     name: {
       type: STRING(64),
@@ -31,9 +33,6 @@ module.exports = app => {
       type: INTEGER,
       default: 0,
     },
-    creatorId: {
-      type: BIGINT,
-    },
     createdAt: {
       type: DATE,
     },
@@ -46,6 +45,30 @@ module.exports = app => {
 
   Model.associate = () => {
     app.model.Lesson.belongsTo(app.model.User);
+  };
+
+  Model.createFromEvent = async data => {
+    const params = _.pick(data, [ 'userId', 'name', 'url', 'goal', 'content', 'quizSize' ]);
+    params.dKey = data.id;
+    const user = await app.model.User.findOne({ where: { dKey: params.userId }, order: [[ 'id', 'DESC' ]] });
+    params.userId = user.id;
+    return app.model.Lesson.create(params);
+  };
+
+  Model.updateFromEvent = async data => {
+    const params = _.pick(data, [ 'name', 'url', 'goal', 'content', 'quizSize' ]);
+    const instance = await app.model.Lesson.findOne({ where: { dKey: data.id }, order: [[ 'id', 'DESC' ]] });
+    return instance.update(params);
+  };
+
+  Model.upsertFromEvent = async data => {
+    if (!data.id) throw new Error('Id cannot be null');
+    try {
+      await app.model.Lesson.updateFromEvent(data);
+    } catch (e) {
+      await app.model.Lesson.createFromEvent(data);
+    }
+    return app.model.Lesson.findOne({ where: { dKey: data.id }, order: [[ 'id', 'DESC' ]] });
   };
 
   return Model;

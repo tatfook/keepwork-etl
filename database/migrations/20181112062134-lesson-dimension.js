@@ -15,6 +15,7 @@ module.exports = {
       },
       userId: { // user dimension
         type: BIGINT,
+        allowNull: false,
       },
       name: {
         type: STRING(64),
@@ -32,9 +33,6 @@ module.exports = {
         type: INTEGER,
         default: 0,
       },
-      creatorId: {
-        type: BIGINT,
-      },
       createdAt: {
         type: DATE,
       },
@@ -46,6 +44,7 @@ module.exports = {
     });
 
     await queryInterface.addIndex('lessons', { fields: [ 'dKey' ] });
+    await queryInterface.addIndex('lessons', { fields: [ 'userId' ] });
     await queryInterface.addIndex('lessons', { fields: [ 'quizSize' ] });
 
   },

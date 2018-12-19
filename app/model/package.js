@@ -3,7 +3,6 @@ const _ = require('lodash');
 
 module.exports = app => {
   const { BIGINT, SMALLINT, INTEGER, DATE, STRING } = app.Sequelize;
-  const { Op } = app.Sequelize;
   const Model = app.model.define('packages', {
     id: {
       type: BIGINT,
@@ -19,6 +18,7 @@ module.exports = app => {
     },
     userId: {
       type: BIGINT,
+      allowNull: false,
     },
     subjectId: {
       type: BIGINT,
@@ -50,12 +50,27 @@ module.exports = app => {
   };
 
   Model.createFromEvent = async data => {
-    const params = _.pick(data, [ 'id', 'userId', 'name', 'subjectName', 'subjectId', 'minAge', 'maxAge', 'lessonCount' ]);
-    params.dKey = params.id;
-    _.omit(params, [ 'id' ]);
-    const user = await app.model.User.findLast({ where: { dKey: { [Op.eq]: params.userId } } });
+    const params = _.pick(data, [ 'userId', 'name', 'subjectName', 'subjectId', 'minAge', 'maxAge', 'lessonCount' ]);
+    params.dKey = data.id;
+    const user = await app.model.User.findOne({ where: { dKey: params.userId }, order: [[ 'id', 'DESC' ]] });
     params.userId = user.id;
     return app.model.Package.create(params);
+  };
+
+  Model.updateFromEvent = async data => {
+    const params = _.pick(data, [ 'name', 'subjectName', 'subjectId', 'minAge', 'maxAge', 'lessonCount' ]);
+    const instance = await app.model.Package.findOne({ where: { dKey: data.id }, order: [[ 'id', 'DESC' ]] });
+    return instance.update(params);
+  };
+
+  Model.upsertFromEvent = async data => {
+    if (!data.id) throw new Error('Id cannot be null');
+    try {
+      await app.model.Package.updateFromEvent(data);
+    } catch (e) {
+      await app.model.Package.createFromEvent(data);
+    }
+    return app.model.Package.findOne({ where: { dKey: data.id }, order: [[ 'id', 'DESC' ]] });
   };
 
   return Model;

@@ -11,9 +11,11 @@ module.exports = {
       },
       lessonId: { // lesson dimension
         type: BIGINT,
+        allowNull: false,
       },
       index: {
         type: INTEGER,
+        allowNull: false,
       },
       content: {
         type: TEXT,
