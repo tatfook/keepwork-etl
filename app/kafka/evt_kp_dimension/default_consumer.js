@@ -1,5 +1,5 @@
 'use strict';
-
+const _ = require('lodash');
 const Subscription = require('egg').Subscription;
 
 /**
@@ -9,8 +9,17 @@ const Subscription = require('egg').Subscription;
 class DefaultConsumer extends Subscription {
   async subscribe(message) {
     const data = this.ctx.helper.decodeEventMessage(message);
-    console.log('Please consume these data: ', data.payload.event);
-    await this.ctx.service.dimension.create(data.payload.event);
+    const event = data.payload.event;
+    try {
+      if (_.startsWith(event.action, 'create_')) {
+        await this.ctx.service.dimension.create(event);
+      } else if (_.startsWith(event.action, 'upsert_')) {
+        await this.ctx.service.dimension.upsert(event);
+      }
+    } catch (e) {
+      this.ctx.logger.error('Failed to consume event: ', event);
+      // throw e;
+    }
   }
 }
 

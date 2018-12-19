@@ -48,14 +48,14 @@ module.exports = app => {
   });
 
   Model.createFromEvent = async data => {
-    const params = _.pick(data, [ 'email', 'mobile', 'nickname', 'authPhone', 'age', 'gender' ]);
+    const params = _.pick(data, [ 'email', 'mobile', 'username', 'nickname', 'authPhone', 'age', 'gender' ]);
     params.dKey = data.id;
     params.registerAt = _.now();
     return app.model.User.create(params);
   };
 
   Model.updateFromEvent = async data => {
-    const params = _.pick(data, [ 'email', 'mobile', 'nickname', 'authPhone', 'age', 'gender' ]);
+    const params = _.pick(data, [ 'email', 'mobile', 'username', 'nickname', 'authPhone', 'age', 'gender' ]);
     const instance = await app.model.User.findOne({ where: { dKey: data.id }, order: [[ 'id', 'DESC' ]] });
     return instance.update(params);
   };

@@ -38,7 +38,7 @@ module.exports = appInfo => {
         groupId: 'event-keepwork-queue',
         stream: true,
         topics: [
-          'evt_kp_user',
+          'evt_kp_dimension',
         ],
       },
       {
