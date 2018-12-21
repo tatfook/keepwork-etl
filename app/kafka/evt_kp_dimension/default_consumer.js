@@ -15,6 +15,8 @@ class DefaultConsumer extends Subscription {
         await this.ctx.service.dimension.create(event);
       } else if (_.startsWith(event.action, 'upsert_')) {
         await this.ctx.service.dimension.upsert(event);
+      } else if (_.startsWith(event.action, 'update_')) {
+        await this.ctx.service.dimension.update(event);
       }
     } catch (e) {
       this.ctx.logger.error('Failed to consume event: ', event);

@@ -51,12 +51,13 @@ module.exports = app => {
 
   Model.upsertFromEvent = async data => {
     if (!data.id) throw new Error('Id cannot be null');
+    let instance;
     try {
-      await app.model.LessonUser.updateFromEvent(data);
+      instance = await app.model.LessonUser.updateFromEvent(data);
     } catch (e) {
-      await app.model.LessonUser.createFromEvent(data);
+      instance = await app.model.LessonUser.createFromEvent(data);
     }
-    return app.model.LessonUser.findOne({ where: { dKey: data.id }, order: [[ 'id', 'DESC' ]] });
+    return instance;
   };
 
   return Model;

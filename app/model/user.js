@@ -48,7 +48,7 @@ module.exports = app => {
   });
 
   Model.createFromEvent = async data => {
-    const params = _.pick(data, [ 'email', 'mobile', 'username', 'nickname', 'authPhone', 'age', 'gender' ]);
+    const params = _.pick(data, [ 'email', 'mobile', 'username', 'nickname', 'authPhone', 'age', 'gender', 'registerAt' ]);
     params.dKey = data.id;
     params.registerAt = _.now();
     return app.model.User.create(params);
@@ -62,12 +62,13 @@ module.exports = app => {
 
   Model.upsertFromEvent = async data => {
     if (!data.id) throw new Error('Id cannot be null');
+    let instance;
     try {
-      await app.model.User.updateFromEvent(data);
+      instance = await app.model.User.updateFromEvent(data);
     } catch (e) {
-      await app.model.User.createFromEvent(data);
+      instance = await app.model.User.createFromEvent(data);
     }
-    return app.model.User.findOne({ where: { dKey: data.id }, order: [[ 'id', 'DESC' ]] });
+    return instance;
   };
 
   return Model;

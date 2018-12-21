@@ -65,12 +65,13 @@ module.exports = app => {
 
   Model.upsertFromEvent = async data => {
     if (!data.id) throw new Error('Id cannot be null');
+    let instance;
     try {
-      await app.model.Package.updateFromEvent(data);
+      instance = await app.model.Package.updateFromEvent(data);
     } catch (e) {
-      await app.model.Package.createFromEvent(data);
+      instance = await app.model.Package.createFromEvent(data);
     }
-    return app.model.Package.findOne({ where: { dKey: data.id }, order: [[ 'id', 'DESC' ]] });
+    return instance;
   };
 
   return Model;

@@ -49,13 +49,13 @@ module.exports = app => {
   };
 
   Model.upsertFromEvent = async data => {
+    let instance;
     try {
-      await app.model.Question.updateFromEvent(data);
+      instance = await app.model.Question.updateFromEvent(data);
     } catch (e) {
-      await app.model.Question.createFromEvent(data);
+      instance = await app.model.Question.createFromEvent(data);
     }
-    const lesson = await app.model.Lesson.findOne({ where: { dKey: data.lessonId }, order: [[ 'id', 'DESC' ]] });
-    return app.model.Question.findOne({ where: { lessonId: lesson.id, index: data.index }, order: [[ 'id', 'DESC' ]] });
+    return instance;
   };
 
   return Model;

@@ -22,7 +22,7 @@ class DimensionService extends Service {
     const { ctx } = this;
     const modelName = this.service.dimension.getModelName(event.action, 'create');
     if (!modelName) return;
-    console.log('create ', modelName, ' with data: ', event.data);
+    // console.log('create ', modelName, ' with data: ', event.data);
     return ctx.model[modelName].createFromEvent(event.data);
   }
 
@@ -30,8 +30,16 @@ class DimensionService extends Service {
     const { ctx } = this;
     const modelName = this.service.dimension.getModelName(event.action, 'upsert');
     if (!modelName) return;
-    console.log('upsert ', modelName, ' with data: ', event.data);
+    // console.log('upsert ', modelName, ' with data: ', event.data);
     return ctx.model[modelName].upsertFromEvent(event.data);
+  }
+
+  async update(event) {
+    const { ctx } = this;
+    const modelName = this.service.dimension.getModelName(event.action, 'update');
+    if (!modelName) return;
+    // console.log('update ', modelName, ' with data: ', event.data);
+    return ctx.model[modelName].updateFromEvent(event.data);
   }
 }
 
