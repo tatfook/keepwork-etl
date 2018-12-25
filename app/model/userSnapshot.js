@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = app => {
-  const { BIGINT, STRING, INTEGER } = app.Sequelize;
+  const { BIGINT, STRING, INTEGER, DATE } = app.Sequelize;
   const Model = app.model.define('user_snapshots', {
     id: {
       type: BIGINT,
@@ -13,11 +13,11 @@ module.exports = app => {
     },
     timeId: {
       type: BIGINT,
-      null: false,
+      allowNull: false,
     },
     userId: {
       type: BIGINT,
-      null: false,
+      allowNull: false,
     },
     totalProjects: {
       type: BIGINT,
@@ -110,6 +110,12 @@ module.exports = app => {
     activity: {
       type: INTEGER,
       defaultValue: 0,
+    },
+    createdAt: {
+      type: DATE,
+    },
+    updatedAt: {
+      type: DATE,
     },
   }, {
     underscored: false,

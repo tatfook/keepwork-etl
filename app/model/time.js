@@ -1,4 +1,5 @@
 'use strict';
+const moment = require('moment');
 
 module.exports = app => {
   const { INTEGER, SMALLINT, DATE, STRING } = app.Sequelize;
@@ -46,7 +47,23 @@ module.exports = app => {
     },
   }, {
     underscored: false,
+    timestamps: false,
   });
+
+  Model.today = async () => {
+    return app.model.Time.getTimeByString(moment().format('YYYYMMDD'));
+  };
+
+  Model.todayId = () => {
+    return moment().format('YYYYMMDD');
+  };
+
+  Model.getTimeByString = async timeString => {
+    if (!timeString) throw new Error('Time cannot be null');
+    const instance = await app.model.Time.findOne({ where: { id: moment(timeString).format('YYYYMMDD') } });
+    if (!instance) throw new Error('Invalid Time');
+    return instance;
+  };
 
   return Model;
 };

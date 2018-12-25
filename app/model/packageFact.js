@@ -1,4 +1,5 @@
 'use strict';
+const _ = require('lodash');
 
 module.exports = app => {
   const { BIGINT, STRING, DATE } = app.Sequelize;
@@ -10,26 +11,32 @@ module.exports = app => {
     },
     timeId: {
       type: BIGINT,
-      null: false,
+      allowNull: false,
     },
     userId: {
       type: BIGINT,
-      null: false,
+      allowNull: false,
     },
     packageId: {
       type: BIGINT,
-      null: false,
+      allowNull: false,
     },
     action: {
       type: STRING(16),
-      null: false,
+      allowNull: false,
     },
     remark: {
       type: STRING(1024),
     },
     operateAt: {
       type: DATE,
-      null: false,
+      allowNull: false,
+    },
+    createdAt: {
+      type: DATE,
+    },
+    updatedAt: {
+      type: DATE,
     },
   }, {
     underscored: false,
@@ -39,6 +46,18 @@ module.exports = app => {
     app.model.PackageFact.belongsTo(app.model.Time);
     app.model.PackageFact.belongsTo(app.model.User);
     app.model.PackageFact.belongsTo(app.model.Package);
+  };
+
+  Model.createFromEvent = async data => {
+    const params = _.pick(data, [ 'action', 'remark', 'operateAt' ]);
+    const user = await app.model.User.findOne({ where: { dKey: data.userId }, order: [[ 'id', 'DESC' ]] });
+    params.userId = user.id;
+    const packageInstance = await app.model.Package.findOne({ where: { dKey: data.packageId }, order: [[ 'id', 'DESC' ]] });
+    params.packageId = packageInstance.id;
+    const timeInstance = await app.model.Time.getTimeByString(data.operateAt);
+    params.timeId = timeInstance.id;
+
+    return app.model.PackageFact.create(params);
   };
 
   return Model;

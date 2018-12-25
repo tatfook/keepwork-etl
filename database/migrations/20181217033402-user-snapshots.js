@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const { BIGINT, STRING, INTEGER } = Sequelize;
+    const { BIGINT, STRING, INTEGER, DATE } = Sequelize;
     await queryInterface.createTable('user_snapshots', {
       id: {
         type: BIGINT,
@@ -14,11 +14,11 @@ module.exports = {
       },
       timeId: {
         type: BIGINT,
-        null: false,
+        allowNull: false,
       },
       userId: {
         type: BIGINT,
-        null: false,
+        allowNull: false,
       },
       totalProjects: {
         type: BIGINT,
@@ -111,6 +111,12 @@ module.exports = {
       activity: {
         type: INTEGER,
         defaultValue: 0,
+      },
+      createdAt: {
+        type: DATE,
+      },
+      updatedAt: {
+        type: DATE,
       },
     }, {
       underscored: false,

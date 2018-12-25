@@ -32,11 +32,12 @@ module.exports = {
       maxAge: {
         type: SMALLINT,
       },
-      price: {
-        type: INTEGER,
-      },
       lessonCount: {
         type: INTEGER,
+      },
+      state: {
+        type: INTEGER,
+        default: 0,
       },
       createdAt: {
         type: DATE,
@@ -49,7 +50,7 @@ module.exports = {
     });
 
     await queryInterface.addIndex('packages', { fields: [ 'dKey' ] });
-    await queryInterface.addIndex('packages', { fields: [ 'price', 'minAge', 'maxAge', 'lessonCount' ], name: 'indexOfPackageInfo' });
+    await queryInterface.addIndex('packages', { fields: [ 'minAge', 'maxAge', 'lessonCount' ], name: 'indexOfPackageInfo' });
     await queryInterface.addIndex('packages', { fields: [ 'createdAt', 'updatedAt' ], name: 'indexOfTime' });
     await queryInterface.addIndex('packages', { fields: [ 'subjectId', 'subjectName' ], name: 'indexOfSubject' });
 

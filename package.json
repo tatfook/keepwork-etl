@@ -8,6 +8,7 @@
     "egg-kafkajs": "github:leopoldchen/egg-kafkajs#master",
     "egg-scripts": "^2.5.0",
     "egg-sequelize": "^4.0.2",
+    "moment": "^2.23.0",
     "mysql2": "^1.6.1"
   },
   "devDependencies": {

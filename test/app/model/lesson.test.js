@@ -4,7 +4,9 @@ const { app, assert } = require('egg-mock/bootstrap');
 
 describe('test/app/model/lesson.test.js', () => {
   let ctx;
+  let error;
   beforeEach(async () => {
+    error = undefined;
     ctx = app.mockContext();
     await ctx.model.User.createFromEvent({ id: 123 });
   });
@@ -25,10 +27,10 @@ describe('test/app/model/lesson.test.js', () => {
       };
       try {
         await ctx.model.Lesson.createFromEvent(data);
-        assert(false);
       } catch (e) {
-        assert(true);
+        error = e;
       }
+      assert(error);
     });
 
     it('should not create Lesson without user id', async () => {
@@ -37,10 +39,10 @@ describe('test/app/model/lesson.test.js', () => {
       };
       try {
         await ctx.model.Lesson.createFromEvent(data);
-        assert(false);
       } catch (e) {
-        assert(true);
+        error = e;
       }
+      assert(error);
     });
   });
 
@@ -63,10 +65,10 @@ describe('test/app/model/lesson.test.js', () => {
       };
       try {
         await ctx.model.Lesson.updateFromEvent(data);
-        assert(false);
       } catch (e) {
-        assert(true);
+        error = e;
       }
+      assert(error);
     });
     it('should not update Lesson without id', async () => {
       const data = {
@@ -74,10 +76,10 @@ describe('test/app/model/lesson.test.js', () => {
       };
       try {
         await ctx.model.Lesson.updateFromEvent(data);
-        assert(false);
       } catch (e) {
-        assert(true);
+        error = e;
       }
+      assert(error);
     });
   });
 

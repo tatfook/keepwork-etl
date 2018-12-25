@@ -6,8 +6,9 @@ BEGIN
     DECLARE v_date DATE;
 
     DELETE FROM times;
+    INSERT INTO times (id) VALUES (1);
 
-    SET v_date = "2018-01-01";
+    SET v_date = "2010-01-01";
     WHILE v_date < "2028-12-31" DO
 
         INSERT INTO times (

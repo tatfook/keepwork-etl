@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = app => {
-  const { BIGINT, STRING, BOOLEAN } = app.Sequelize;
+  const { BIGINT, STRING, BOOLEAN, DATE } = app.Sequelize;
   const Model = app.model.define('test_question_facts', {
     id: {
       type: BIGINT,
@@ -10,23 +10,23 @@ module.exports = app => {
     },
     timeId: {
       type: BIGINT,
-      null: false,
+      allowNull: false,
     },
     userId: {
       type: BIGINT,
-      null: false,
+      allowNull: false,
     },
     packageId: {
       type: BIGINT,
-      null: false,
+      allowNull: false,
     },
     lessonId: {
       type: BIGINT,
-      null: false,
+      allowNull: false,
     },
     questionId: {
       type: BIGINT,
-      null: false,
+      allowNull: false,
     },
     classroomKey: {
       type: STRING(64),
@@ -39,6 +39,12 @@ module.exports = app => {
     },
     isRight: {
       type: BOOLEAN,
+    },
+    createdAt: {
+      type: DATE,
+    },
+    updatedAt: {
+      type: DATE,
     },
   }, {
     underscored: false,

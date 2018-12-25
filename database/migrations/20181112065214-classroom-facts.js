@@ -3,7 +3,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const { BIGINT, INTEGER, STRING, DATE } = Sequelize;
-    await queryInterface.createTable('learning_facts', {
+    await queryInterface.createTable('classroom_facts', {
       id: {
         type: BIGINT,
         autoIncrement: true,
@@ -17,7 +17,7 @@ module.exports = {
         type: BIGINT,
         default: 1,
       },
-      userId: {
+      teacherId: {
         type: BIGINT,
         allowNull: false,
       },
@@ -32,23 +32,7 @@ module.exports = {
       classroomKey: {
         type: STRING(64),
       },
-      recordKey: {
-        type: STRING(64),
-      },
-      quizSize: {
-        type: INTEGER,
-      },
-      quizRight: {
-        type: INTEGER,
-      },
-      quizWrong: {
-        type: INTEGER,
-      },
-      coinReward: {
-        type: INTEGER,
-        default: 0,
-      },
-      beanReward: {
+      studentCount: {
         type: INTEGER,
         default: 0,
       },
@@ -71,14 +55,13 @@ module.exports = {
       underscored: false,
     });
 
-    await queryInterface.addIndex('learning_facts', { fields: [ 'beginTimeId', 'endTimeId', 'userId', 'packageId', 'lessonId' ], name: 'indexOfDimesion' });
-    await queryInterface.addIndex('learning_facts', { fields: [ 'classroomKey', 'recordKey', 'timeAmount' ], name: 'indexOfLearning' });
-    await queryInterface.addIndex('learning_facts', { fields: [ 'quizSize', 'quizRight', 'quizWrong' ], name: 'indexOfQuiz' });
-    await queryInterface.addIndex('learning_facts', { fields: [ 'beanReward', 'coinReward' ], name: 'indexOfReward' });
+    await queryInterface.addIndex('classroom_facts', { fields: [ 'beginTimeId', 'endTimeId', 'teacherId', 'packageId', 'lessonId' ], name: 'indexOfDimesion' });
+
+    await queryInterface.addIndex('classroom_facts', { fields: [ 'classroomKey', 'studentCount', 'timeAmount' ], name: 'indexOfTeaching' });
 
   },
 
   down: queryInterface => {
-    return queryInterface.dropTable('learning_facts');
+    return queryInterface.dropTable('classroom_facts');
   },
 };

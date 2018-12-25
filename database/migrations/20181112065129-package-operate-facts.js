@@ -11,26 +11,32 @@ module.exports = {
       },
       timeId: {
         type: BIGINT,
-        null: false,
+        allowNull: false,
       },
       userId: {
         type: BIGINT,
-        null: false,
+        allowNull: false,
       },
       packageId: {
         type: BIGINT,
-        null: false,
+        allowNull: false,
       },
       action: {
         type: STRING(16),
-        null: false,
+        allowNull: false,
       },
       remark: {
         type: STRING(1024),
       },
       operateAt: {
         type: DATE,
-        null: false,
+        allowNull: false,
+      },
+      createdAt: {
+        type: DATE,
+      },
+      updatedAt: {
+        type: DATE,
       },
     }, {
       underscored: false,

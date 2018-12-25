@@ -4,7 +4,9 @@ const { app, assert } = require('egg-mock/bootstrap');
 
 describe('test/app/model/question.test.js', () => {
   let ctx;
+  let error;
   beforeEach(async () => {
+    error = undefined;
     ctx = app.mockContext();
     await ctx.model.User.createFromEvent({ id: 123 });
     await ctx.model.Lesson.createFromEvent({ id: 123, userId: 123 });
@@ -27,10 +29,10 @@ describe('test/app/model/question.test.js', () => {
       };
       try {
         await ctx.model.Question.createFromEvent(data);
-        assert(false);
       } catch (e) {
-        assert(true);
+        error = e;
       }
+      assert(error);
     });
   });
 
@@ -55,10 +57,10 @@ describe('test/app/model/question.test.js', () => {
       };
       try {
         await ctx.model.Question.updateFromEvent(data);
-        assert(false);
       } catch (e) {
-        assert(true);
+        error = e;
       }
+      assert(error);
     });
     it('should not update Question without id', async () => {
       const data = {
@@ -67,10 +69,10 @@ describe('test/app/model/question.test.js', () => {
       };
       try {
         await ctx.model.Question.updateFromEvent(data);
-        assert(false);
       } catch (e) {
-        assert(true);
+        error = e;
       }
+      assert(error);
     });
     it('should not update Question without index', async () => {
       const data = {
@@ -79,10 +81,10 @@ describe('test/app/model/question.test.js', () => {
       };
       try {
         await ctx.model.Question.updateFromEvent(data);
-        assert(false);
       } catch (e) {
-        assert(true);
+        error = e;
       }
+      assert(error);
     });
   });
 

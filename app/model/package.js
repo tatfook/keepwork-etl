@@ -35,6 +35,10 @@ module.exports = app => {
     lessonCount: {
       type: INTEGER,
     },
+    state: {
+      type: INTEGER,
+      default: 0,
+    },
     createdAt: {
       type: DATE,
     },
@@ -50,7 +54,7 @@ module.exports = app => {
   };
 
   Model.createFromEvent = async data => {
-    const params = _.pick(data, [ 'userId', 'name', 'subjectName', 'subjectId', 'minAge', 'maxAge', 'lessonCount' ]);
+    const params = _.pick(data, [ 'userId', 'name', 'subjectName', 'subjectId', 'minAge', 'maxAge', 'lessonCount', 'state' ]);
     params.dKey = data.id;
     const user = await app.model.User.findOne({ where: { dKey: params.userId }, order: [[ 'id', 'DESC' ]] });
     params.userId = user.id;
@@ -58,7 +62,7 @@ module.exports = app => {
   };
 
   Model.updateFromEvent = async data => {
-    const params = _.pick(data, [ 'name', 'subjectName', 'subjectId', 'minAge', 'maxAge', 'lessonCount' ]);
+    const params = _.pick(data, [ 'name', 'subjectName', 'subjectId', 'minAge', 'maxAge', 'lessonCount', 'state' ]);
     const instance = await app.model.Package.findOne({ where: { dKey: data.id }, order: [[ 'id', 'DESC' ]] });
     return instance.update(params);
   };

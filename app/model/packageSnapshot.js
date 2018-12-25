@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = app => {
-  const { BIGINT, STRING } = app.Sequelize;
+  const { BIGINT, STRING, DATE } = app.Sequelize;
   const Model = app.model.define('package_snapshots', {
     id: {
       type: BIGINT,
@@ -13,11 +13,11 @@ module.exports = app => {
     },
     timeId: {
       type: BIGINT,
-      null: false,
+      allowNull: false,
     },
     packageId: {
       type: BIGINT,
-      null: false,
+      allowNull: false,
     },
     subscribeCount: {
       type: BIGINT,
@@ -50,6 +50,12 @@ module.exports = app => {
     newLearningCount: {
       type: BIGINT,
       defaultValue: 0,
+    },
+    createdAt: {
+      type: DATE,
+    },
+    updatedAt: {
+      type: DATE,
     },
   }, {
     underscored: false,

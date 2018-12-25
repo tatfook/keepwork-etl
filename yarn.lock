@@ -2598,7 +2598,7 @@ egg-jsonp@^2.0.0:
     bluebird "^3.5.1"
     events "^1.1.1"
     extend "^3.0.1"
-    kafka-node "^3.0.0"
+    kafka-node "^2.3.0"
 
 egg-logger@^1.6.2, egg-logger@^1.7.1:
   version "1.7.1"
@@ -5003,7 +5003,7 @@ moment-timezone@^0.5.14, moment-timezone@^0.5.23:
   dependencies:
     moment ">= 2.9.0"
 
-"moment@>= 2.9.0", moment@^2.19.2, moment@^2.20.0, moment@^2.22.2:
+"moment@>= 2.9.0", moment@^2.19.2, moment@^2.20.0, moment@^2.22.2, moment@^2.23.0:
   version "2.23.0"
   resolved "http://registry.npm.taobao.org/moment/download/moment-2.23.0.tgz#759ea491ac97d54bac5ad776996e2a58cc1bc225"
   integrity sha1-dZ6kkayX1UusWtd2mW4qWMwbwiU=

@@ -4,7 +4,9 @@ const { app, assert } = require('egg-mock/bootstrap');
 
 describe('test/app/model/user.test.js', () => {
   let ctx;
+  let error;
   beforeEach(() => {
+    error = undefined;
     ctx = app.mockContext();
   });
 
@@ -26,10 +28,10 @@ describe('test/app/model/user.test.js', () => {
       };
       try {
         await ctx.model.User.createFromEvent(data);
-        assert(false);
       } catch (e) {
-        assert(true);
+        error = e;
       }
+      assert(error);
     });
   });
 
@@ -52,10 +54,10 @@ describe('test/app/model/user.test.js', () => {
       };
       try {
         await ctx.model.User.updateFromEvent(data);
-        assert(false);
       } catch (e) {
-        assert(true);
+        error = e;
       }
+      assert(error);
     });
     it('should not update user without id', async () => {
       const data = {
@@ -63,10 +65,10 @@ describe('test/app/model/user.test.js', () => {
       };
       try {
         await ctx.model.User.updateFromEvent(data);
-        assert(false);
       } catch (e) {
-        assert(true);
+        error = e;
       }
+      assert(error);
     });
   });
 

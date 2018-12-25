@@ -47,6 +47,7 @@ module.exports = {
       },
     }, {
       underscored: false,
+      timestamps: false,
     });
 
     await queryInterface.addIndex('times', { fields: [ 'date' ] });

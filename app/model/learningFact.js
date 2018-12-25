@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = app => {
-  const { BIGINT, INTEGER, STRING } = app.Sequelize;
+  const { BIGINT, INTEGER, STRING, DATE } = app.Sequelize;
   const Model = app.model.define('learning_facts', {
     id: {
       type: BIGINT,
@@ -10,22 +10,23 @@ module.exports = app => {
     },
     beginTimeId: {
       type: BIGINT,
-      null: false,
+      allowNull: false,
     },
     endTimeId: {
       type: BIGINT,
+      default: 1,
     },
     userId: {
       type: BIGINT,
-      null: false,
+      allowNull: false,
     },
     packageId: {
       type: BIGINT,
-      null: false,
+      allowNull: false,
     },
     lessonId: {
       type: BIGINT,
-      null: false,
+      allowNull: false,
     },
     classroomKey: {
       type: STRING(64),
@@ -52,6 +53,18 @@ module.exports = app => {
     },
     timeAmount: {
       type: INTEGER,
+    },
+    beginAt: {
+      type: DATE,
+    },
+    endAt: {
+      type: DATE,
+    },
+    createdAt: {
+      type: DATE,
+    },
+    updatedAt: {
+      type: DATE,
     },
   }, {
     underscored: false,

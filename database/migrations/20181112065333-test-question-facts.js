@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const { BIGINT, STRING, BOOLEAN } = Sequelize;
+    const { BIGINT, STRING, BOOLEAN, DATE } = Sequelize;
     await queryInterface.createTable('test_question_facts', {
       id: {
         type: BIGINT,
@@ -11,23 +11,23 @@ module.exports = {
       },
       timeId: {
         type: BIGINT,
-        null: false,
+        allowNull: false,
       },
       userId: {
         type: BIGINT,
-        null: false,
+        allowNull: false,
       },
       packageId: {
         type: BIGINT,
-        null: false,
+        allowNull: false,
       },
       lessonId: {
         type: BIGINT,
-        null: false,
+        allowNull: false,
       },
       questionId: {
         type: BIGINT,
-        null: false,
+        allowNull: false,
       },
       classroomKey: {
         type: STRING(64),
@@ -40,6 +40,12 @@ module.exports = {
       },
       isRight: {
         type: BOOLEAN,
+      },
+      createdAt: {
+        type: DATE,
+      },
+      updatedAt: {
+        type: DATE,
       },
     }, {
       underscored: false,

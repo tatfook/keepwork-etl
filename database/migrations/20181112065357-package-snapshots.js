@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const { BIGINT, STRING } = Sequelize;
+    const { BIGINT, STRING, DATE } = Sequelize;
     await queryInterface.createTable('package_snapshots', {
       id: {
         type: BIGINT,
@@ -14,11 +14,11 @@ module.exports = {
       },
       timeId: {
         type: BIGINT,
-        null: false,
+        allowNull: false,
       },
       packageId: {
         type: BIGINT,
-        null: false,
+        allowNull: false,
       },
       subscribeCount: {
         type: BIGINT,
@@ -51,6 +51,12 @@ module.exports = {
       newLearningCount: {
         type: BIGINT,
         defaultValue: 0,
+      },
+      createdAt: {
+        type: DATE,
+      },
+      updatedAt: {
+        type: DATE,
       },
     }, {
       underscored: false,
