@@ -15,7 +15,7 @@ module.exports = {
       },
       endTimeId: {
         type: BIGINT,
-        default: 1,
+        defaultValue: 1,
       },
       teacherId: {
         type: BIGINT,
@@ -34,7 +34,7 @@ module.exports = {
       },
       studentCount: {
         type: INTEGER,
-        default: 0,
+        defaultValue: 0,
       },
       timeAmount: {
         type: INTEGER,

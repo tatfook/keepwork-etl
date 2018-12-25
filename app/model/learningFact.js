@@ -1,5 +1,8 @@
 'use strict';
 
+const _ = require('lodash');
+const moment = require('moment');
+
 module.exports = app => {
   const { BIGINT, INTEGER, STRING, DATE } = app.Sequelize;
   const Model = app.model.define('learning_facts', {
@@ -14,7 +17,7 @@ module.exports = app => {
     },
     endTimeId: {
       type: BIGINT,
-      default: 1,
+      defaultValue: 1,
     },
     userId: {
       type: BIGINT,
@@ -33,26 +36,32 @@ module.exports = app => {
     },
     recordKey: {
       type: STRING(64),
+      allowNull: false,
     },
     quizSize: {
       type: INTEGER,
+      defaultValue: 0,
     },
     quizRight: {
       type: INTEGER,
+      defaultValue: 0,
     },
     quizWrong: {
       type: INTEGER,
+      defaultValue: 0,
     },
     coinReward: {
       type: INTEGER,
-      default: 0,
+      defaultValue: 0,
     },
     beanReward: {
       type: INTEGER,
-      default: 0,
+      defaultValue: 0,
     },
     timeAmount: {
       type: INTEGER,
+      defaultValue: 0,
+      validate: { min: 0 },
     },
     beginAt: {
       type: DATE,
@@ -82,6 +91,44 @@ module.exports = app => {
     app.model.LearningFact.belongsTo(app.model.User);
     app.model.LearningFact.belongsTo(app.model.Package);
     app.model.LearningFact.belongsTo(app.model.Lesson);
+  };
+
+  Model.beginLearning = async data => {
+    const params = _.pick(data, [ 'classroomKey', 'recordKey', 'beginAt' ]);
+    const user = await app.model.User.findOne({ where: { dKey: data.userId }, order: [[ 'id', 'DESC' ]] });
+    params.userId = user.id;
+    const packageInstance = await app.model.Package.findOne({ where: { dKey: data.packageId }, order: [[ 'id', 'DESC' ]] });
+    params.packageId = packageInstance.id;
+    const lessonInstance = await app.model.Lesson.findOne({ where: { dKey: data.lessonId }, order: [[ 'id', 'DESC' ]] });
+    params.lessonId = lessonInstance.id;
+    const timeInstance = await app.model.Time.getTimeByString(data.beginAt);
+    params.beginTimeId = timeInstance.id;
+
+    return app.model.LearningFact.create(params);
+  };
+
+  Model.endLearning = async data => {
+    const params = _.pick(data, [ 'endAt', 'quizSize', 'quizRight', 'quizWrong', 'coinReward', 'beanReward' ]);
+    const user = await app.model.User.findOne({ where: { dKey: data.userId }, order: [[ 'id', 'DESC' ]] });
+    const packageInstance = await app.model.Package.findOne({ where: { dKey: data.packageId }, order: [[ 'id', 'DESC' ]] });
+    const lessonInstance = await app.model.Lesson.findOne({ where: { dKey: data.lessonId }, order: [[ 'id', 'DESC' ]] });
+    const timeInstance = await app.model.Time.getTimeByString(data.endAt);
+    const query = {
+      recordKey: data.recordKey,
+      userId: user.id,
+      packageId: packageInstance.id,
+      lessonId: lessonInstance.id,
+    };
+    if (data.classroomKey) query.classroomKey = data.classroomKey;
+    const instance = await app.model.LearningFact.findOne({
+      where: query,
+      order: [[ 'id', 'DESC' ]],
+    });
+
+    params.endTimeId = timeInstance.id;
+    params.timeAmount = Math.round(moment.duration(moment(data.endAt).diff(moment(instance.beginAt))).asMinutes());
+
+    return instance.update(params);
   };
 
   return Model;

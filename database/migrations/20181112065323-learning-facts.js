@@ -15,7 +15,7 @@ module.exports = {
       },
       endTimeId: {
         type: BIGINT,
-        default: 1,
+        defaultValue: 1,
       },
       userId: {
         type: BIGINT,
@@ -34,26 +34,31 @@ module.exports = {
       },
       recordKey: {
         type: STRING(64),
+        allowNull: false,
       },
       quizSize: {
         type: INTEGER,
+        defaultValue: 0,
       },
       quizRight: {
         type: INTEGER,
+        defaultValue: 0,
       },
       quizWrong: {
         type: INTEGER,
+        defaultValue: 0,
       },
       coinReward: {
         type: INTEGER,
-        default: 0,
+        defaultValue: 0,
       },
       beanReward: {
         type: INTEGER,
-        default: 0,
+        defaultValue: 0,
       },
       timeAmount: {
         type: INTEGER,
+        defaultValue: 0,
       },
       beginAt: {
         type: DATE,

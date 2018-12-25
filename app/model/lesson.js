@@ -31,7 +31,7 @@ module.exports = app => {
     },
     quizSize: {
       type: INTEGER,
-      default: 0,
+      defaultValue: 0,
     },
     createdAt: {
       type: DATE,

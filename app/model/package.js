@@ -37,7 +37,7 @@ module.exports = app => {
     },
     state: {
       type: INTEGER,
-      default: 0,
+      defaultValue: 0,
     },
     createdAt: {
       type: DATE,

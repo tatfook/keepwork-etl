@@ -14,16 +14,25 @@ class LessonService extends Service {
     return this.ctx.model.ClassroomFact.endClass(event.data);
   }
 
-  async beginLearning(data) {
-    console.log(data);
+  async beginLearning(event) {
+    assert(event.action === 'begin_learning');
+    if (event.data.classroomKey) {
+      await this.ctx.model.ClassroomFact.updateStudentCountWithDiff({ ...event.data, diff: 1 });
+    }
+    return this.ctx.model.LearningFact.beginLearning(event.data);
   }
 
-  async endLearning(data) {
-    console.log(data);
+  async endLearning(event) {
+    assert(event.action === 'end_learning');
+    return this.ctx.model.LearningFact.endLearning(event.data);
   }
 
-  async quitLearning(data) {
-    console.log(data);
+  async quitLearning(event) {
+    assert(event.action === 'quit_learning');
+    if (event.data.classroomKey) {
+      await this.ctx.model.ClassroomFact.updateStudentCountWithDiff({ ...event.data, diff: -1 });
+    }
+    return this.ctx.model.LearningFact.endLearning(event.data);
   }
 }
 
