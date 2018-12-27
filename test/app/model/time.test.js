@@ -50,7 +50,6 @@ describe('test/app/model/time.test.js', () => {
       try {
         await ctx.model.Time.getTimeByString('2000-11-12');
       } catch (e) {
-        console.log(e);
         error = e;
       }
       assert(error);
@@ -60,7 +59,6 @@ describe('test/app/model/time.test.js', () => {
       try {
         await ctx.model.Time.getTimeByString();
       } catch (e) {
-        console.log(e);
         error = e;
       }
       assert(error);

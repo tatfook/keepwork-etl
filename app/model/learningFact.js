@@ -37,6 +37,7 @@ module.exports = app => {
     recordKey: {
       type: STRING(64),
       allowNull: false,
+      unique: true, // learning record key
     },
     quizSize: {
       type: INTEGER,
@@ -109,17 +110,10 @@ module.exports = app => {
 
   Model.endLearning = async data => {
     const params = _.pick(data, [ 'endAt', 'quizSize', 'quizRight', 'quizWrong', 'coinReward', 'beanReward' ]);
-    const user = await app.model.User.findOne({ where: { dKey: data.userId }, order: [[ 'id', 'DESC' ]] });
-    const packageInstance = await app.model.Package.findOne({ where: { dKey: data.packageId }, order: [[ 'id', 'DESC' ]] });
-    const lessonInstance = await app.model.Lesson.findOne({ where: { dKey: data.lessonId }, order: [[ 'id', 'DESC' ]] });
     const timeInstance = await app.model.Time.getTimeByString(data.endAt);
     const query = {
       recordKey: data.recordKey,
-      userId: user.id,
-      packageId: packageInstance.id,
-      lessonId: lessonInstance.id,
     };
-    if (data.classroomKey) query.classroomKey = data.classroomKey;
     const instance = await app.model.LearningFact.findOne({
       where: query,
       order: [[ 'id', 'DESC' ]],

@@ -24,6 +24,7 @@ class LessonService extends Service {
 
   async endLearning(event) {
     assert(event.action === 'end_learning');
+    await this.service.fact.learning.endQuiz(event.data.quiz, event.data.recordKey);
     return this.ctx.model.LearningFact.endLearning(event.data);
   }
 
@@ -32,7 +33,18 @@ class LessonService extends Service {
     if (event.data.classroomKey) {
       await this.ctx.model.ClassroomFact.updateStudentCountWithDiff({ ...event.data, diff: -1 });
     }
+    await this.service.fact.learning.endQuiz(event.data.quiz, event.data.recordKey);
     return this.ctx.model.LearningFact.endLearning(event.data);
+  }
+
+  async endQuiz(data, recordKey) {
+    if (!data || !recordKey) return false;
+    if (!Array.isArray(data)) return false;
+    for (let i = 0; i < data.length; i++) {
+      data[i].recordKey = recordKey;
+      await this.ctx.model.TestQuestionFact.createFromEvent(data[i]);
+    }
+    return true;
   }
 }
 

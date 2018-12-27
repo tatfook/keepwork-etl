@@ -2,7 +2,7 @@
 
 const { app, assert } = require('egg-mock/bootstrap');
 
-describe('test/app/model/lessonFact.test.js', () => {
+describe('test/app/model/learningFact.test.js', () => {
   let ctx;
   let error;
   beforeEach(async () => {
@@ -229,87 +229,6 @@ describe('test/app/model/lessonFact.test.js', () => {
       assert(error);
     });
 
-    it('should not update learning fact with invalid user id', async () => {
-      try {
-        await ctx.model.LearningFact.endLearning({
-          recordKey: '12345',
-          userId: 12345,
-          packageId: 12345,
-          lessonId: 12345,
-          endAt: '2018-12-25 00:10:00',
-        });
-      } catch (e) {
-        error = e;
-      }
-      assert(error);
-      error = undefined;
-      try {
-        await ctx.model.LearningFact.endLearning({
-          recordKey: '12345',
-          packageId: 12345678,
-          lessonId: 12345,
-          endAt: '2018-12-25 00:10:00',
-        });
-      } catch (e) {
-        error = e;
-      }
-      assert(error);
-    });
-
-    it('should not update learning fact with invalid package id', async () => {
-      try {
-        await ctx.model.LearningFact.endLearning({
-          recordKey: '12345',
-          userId: 123,
-          lessonId: 12345,
-          endAt: '2018-12-25 00:10:00',
-        });
-      } catch (e) {
-        error = e;
-      }
-      assert(error);
-      error = undefined;
-      try {
-        await ctx.model.LearningFact.endLearning({
-          recordKey: '12345',
-          userId: 123,
-          packageId: 12345678,
-          lessonId: 12345,
-          endAt: '2018-12-25 00:10:00',
-        });
-      } catch (e) {
-        error = e;
-      }
-      assert(error);
-    });
-
-    it('should not update learning fact with invalid lesson id', async () => {
-      try {
-        await ctx.model.LearningFact.endLearning({
-          recordKey: '12345',
-          userId: 123,
-          packageId: 12345,
-          endAt: '2018-12-25 00:10:00',
-        });
-      } catch (e) {
-        error = e;
-      }
-      assert(error);
-      error = undefined;
-      try {
-        await ctx.model.LearningFact.endLearning({
-          recordKey: '12345',
-          userId: 123,
-          packageId: 12345,
-          lessonId: 12345678,
-          endAt: '2018-12-25 00:10:00',
-        });
-      } catch (e) {
-        error = e;
-      }
-      assert(error);
-    });
-
     it('should not update learning fact with invalid time', async () => {
       try {
         await ctx.model.LearningFact.endLearning({
@@ -337,4 +256,5 @@ describe('test/app/model/lessonFact.test.js', () => {
       assert(error);
     });
   });
+
 });

@@ -35,6 +35,7 @@ module.exports = {
       recordKey: {
         type: STRING(64),
         allowNull: false,
+        unique: true, // learning record key
       },
       quizSize: {
         type: INTEGER,
@@ -77,7 +78,7 @@ module.exports = {
     });
 
     await queryInterface.addIndex('learning_facts', { fields: [ 'beginTimeId', 'endTimeId', 'userId', 'packageId', 'lessonId' ], name: 'indexOfDimesion' });
-    await queryInterface.addIndex('learning_facts', { fields: [ 'classroomKey', 'recordKey', 'timeAmount' ], name: 'indexOfLearning' });
+    await queryInterface.addIndex('learning_facts', { fields: [ 'recordKey', 'classroomKey', 'timeAmount' ], name: 'indexOfLearning' });
     await queryInterface.addIndex('learning_facts', { fields: [ 'quizSize', 'quizRight', 'quizWrong' ], name: 'indexOfQuiz' });
     await queryInterface.addIndex('learning_facts', { fields: [ 'beanReward', 'coinReward' ], name: 'indexOfReward' });
 
