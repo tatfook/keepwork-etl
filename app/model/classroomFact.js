@@ -94,16 +94,11 @@ module.exports = app => {
 
   Model.updateStudentCount = async data => {
     const params = _.pick(data, [ 'studentCount' ]);
-    const packageInstance = await app.model.Package.findOne({ where: { dKey: data.packageId }, order: [[ 'id', 'DESC' ]] });
-    const lessonInstance = await app.model.Lesson.findOne({ where: { dKey: data.lessonId }, order: [[ 'id', 'DESC' ]] });
 
     const instance = await app.model.ClassroomFact.findOne({
       where: {
         classroomKey: data.classroomKey,
-        packageId: packageInstance.id,
-        lessonId: lessonInstance.id,
       },
-      order: [[ 'id', 'DESC' ]],
     });
 
     return instance.update(params);
@@ -112,16 +107,10 @@ module.exports = app => {
   Model.updateStudentCountWithDiff = async data => {
     if (data.diff === 0) throw new Error('Invalid diff');
     const params = {};
-    const packageInstance = await app.model.Package.findOne({ where: { dKey: data.packageId }, order: [[ 'id', 'DESC' ]] });
-    const lessonInstance = await app.model.Lesson.findOne({ where: { dKey: data.lessonId }, order: [[ 'id', 'DESC' ]] });
-
     const instance = await app.model.ClassroomFact.findOne({
       where: {
         classroomKey: data.classroomKey,
-        packageId: packageInstance.id,
-        lessonId: lessonInstance.id,
       },
-      order: [[ 'id', 'DESC' ]],
     });
 
     params.studentCount = instance.studentCount + data.diff;
@@ -132,18 +121,13 @@ module.exports = app => {
   Model.endClass = async data => {
     const params = _.pick(data, [ 'endAt', 'studentCount' ]);
     if (!params.endAt) params.endAt = _.now();
-    const packageInstance = await app.model.Package.findOne({ where: { dKey: data.packageId }, order: [[ 'id', 'DESC' ]] });
-    const lessonInstance = await app.model.Lesson.findOne({ where: { dKey: data.lessonId }, order: [[ 'id', 'DESC' ]] });
     const timeInstance = await app.model.Time.getTimeByString(data.endAt);
     params.endTimeId = timeInstance.id;
 
     const instance = await app.model.ClassroomFact.findOne({
       where: {
         classroomKey: data.classroomKey,
-        packageId: packageInstance.id,
-        lessonId: lessonInstance.id,
       },
-      order: [[ 'id', 'DESC' ]],
     });
 
     params.timeAmount = Math.round(moment.duration(moment(data.endAt).diff(moment(instance.beginAt))).asMinutes());

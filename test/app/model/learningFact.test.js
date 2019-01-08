@@ -183,9 +183,6 @@ describe('test/app/model/learningFact.test.js', () => {
     it('should update learning fact with valid data', async () => {
       const fact = await ctx.model.LearningFact.endLearning({
         recordKey: '12345',
-        userId: 123,
-        packageId: 12345,
-        lessonId: 12345,
         endAt: '2018-12-25 00:10:00',
       });
 
@@ -205,9 +202,6 @@ describe('test/app/model/learningFact.test.js', () => {
       const fact = await ctx.model.LearningFact.endLearning({
         classroomKey: '12345',
         recordKey: '123456',
-        userId: 123,
-        packageId: 12345,
-        lessonId: 12345,
         endAt: '2018-12-25 00:10:00',
       });
 
@@ -218,9 +212,6 @@ describe('test/app/model/learningFact.test.js', () => {
     it('should not update learning fact without recordKey', async () => {
       try {
         await ctx.model.LearningFact.endLearning({
-          userId: 123,
-          packageId: 12345,
-          lessonId: 12345,
           endAt: '2018-12-25 00:10:00',
         });
       } catch (e) {
@@ -233,9 +224,6 @@ describe('test/app/model/learningFact.test.js', () => {
       try {
         await ctx.model.LearningFact.endLearning({
           recordKey: '12345',
-          userId: 123,
-          packageId: 12345,
-          lessonId: 12345,
           endAt: '2118-12-25',
         });
       } catch (e) {
@@ -246,9 +234,6 @@ describe('test/app/model/learningFact.test.js', () => {
       try {
         await ctx.model.LearningFact.endLearning({
           recordKey: '12345',
-          userId: 123,
-          packageId: 12345,
-          lessonId: 12345678,
         });
       } catch (e) {
         error = e;

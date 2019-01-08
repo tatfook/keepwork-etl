@@ -114,10 +114,7 @@ module.exports = app => {
     const query = {
       recordKey: data.recordKey,
     };
-    const instance = await app.model.LearningFact.findOne({
-      where: query,
-      order: [[ 'id', 'DESC' ]],
-    });
+    const instance = await app.model.LearningFact.findOne({ where: query });
 
     params.endTimeId = timeInstance.id;
     params.timeAmount = Math.round(moment.duration(moment(data.endAt).diff(moment(instance.beginAt))).asMinutes());

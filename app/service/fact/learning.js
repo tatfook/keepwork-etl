@@ -30,16 +30,16 @@ class LessonService extends Service {
 
   async quitLearning(event) {
     assert(event.action === 'quit_learning');
-    if (event.data.classroomKey) {
-      await this.ctx.model.ClassroomFact.updateStudentCountWithDiff({ ...event.data, diff: -1 });
+    const learningFact = await this.ctx.model.LearningFact.findOne({ where: { recordKey: event.data.recordKey } });
+    if (learningFact.classroomKey) {
+      await this.ctx.model.ClassroomFact.updateStudentCountWithDiff({ classroomKey: learningFact.classroomKey, diff: -1 });
     }
     await this.service.fact.learning.endQuiz(event.data.quiz, event.data.recordKey);
     return this.ctx.model.LearningFact.endLearning(event.data);
   }
 
   async endQuiz(data, recordKey) {
-    if (!data || !recordKey) return false;
-    if (!Array.isArray(data)) return false;
+    if (!data || !Array.isArray(data) || !recordKey) return false;
     for (let i = 0; i < data.length; i++) {
       data[i].recordKey = recordKey;
       await this.ctx.model.TestQuestionFact.createFromEvent(data[i]);

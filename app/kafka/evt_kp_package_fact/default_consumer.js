@@ -3,7 +3,7 @@ const Subscription = require('egg').Subscription;
 
 /**
  * Topic evt_kp_package_fact is aim to handle all operate actions for package.
- * Include: ['submit_package', 'review_package', 'release_package', 'reject_package', 'subsribePackage', 'viewPackage']
+ * Include: ['submit_package', 'review_package', 'release_package', 'reject_package', 'subsribe_package', 'view_package']
  */
 class DefaultConsumer extends Subscription {
   async subscribe(message) {

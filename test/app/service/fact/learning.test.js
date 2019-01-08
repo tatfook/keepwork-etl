@@ -75,9 +75,6 @@ describe('test/app/service/fact/learning.test.js', () => {
         data: {
           classroomKey: '12345',
           endAt: '2018-12-24 00:10:00',
-          teacherId: 123,
-          packageId: 12345,
-          lessonId: 12345,
         },
       });
       assert(fact.endTimeId === 20181224);
@@ -90,9 +87,6 @@ describe('test/app/service/fact/learning.test.js', () => {
           data: {
             classroomKey: '12345',
             endAt: '2018-12-24 00:00:10',
-            teacherId: 123,
-            packageId: 12345,
-            lessonId: 12345,
           },
         });
       } catch (e) {
@@ -157,9 +151,6 @@ describe('test/app/service/fact/learning.test.js', () => {
           action: 'end_learning',
           data: {
             recordKey: '12345',
-            userId: 123,
-            packageId: 12345,
-            lessonId: 12345,
             endAt: '2018-12-25 00:10:00',
           },
         });
@@ -174,9 +165,6 @@ describe('test/app/service/fact/learning.test.js', () => {
             action: 'end_what',
             data: {
               recordKey: '12345',
-              userId: 123,
-              packageId: 12345,
-              lessonId: 12345,
               endAt: '2018-12-25 00:10:00',
             },
           });
@@ -194,9 +182,6 @@ describe('test/app/service/fact/learning.test.js', () => {
           action: 'end_learning',
           data: {
             recordKey: '12345',
-            userId: 123,
-            packageId: 12345,
-            lessonId: 12345,
             endAt: '2018-12-25 00:10:00',
             quiz: [
               {
@@ -238,9 +223,6 @@ describe('test/app/service/fact/learning.test.js', () => {
           action: 'quit_learning',
           data: {
             recordKey: '12345',
-            userId: 123,
-            packageId: 12345,
-            lessonId: 12345,
             endAt: '2018-12-25 00:10:00',
           },
         });
@@ -255,9 +237,6 @@ describe('test/app/service/fact/learning.test.js', () => {
             action: 'quit_what',
             data: {
               recordKey: '12345',
-              userId: 123,
-              packageId: 12345,
-              lessonId: 12345,
               endAt: '2018-12-25 00:10:00',
             },
           });
@@ -275,9 +254,6 @@ describe('test/app/service/fact/learning.test.js', () => {
           action: 'quit_learning',
           data: {
             recordKey: '12345',
-            userId: 123,
-            packageId: 12345,
-            lessonId: 12345,
             endAt: '2018-12-25 00:10:00',
             quiz: [
               {
@@ -358,11 +334,7 @@ describe('test/app/service/fact/learning.test.js', () => {
         category: 'keepwork',
         action: 'end_learning',
         data: {
-          classroomKey: '12345',
           recordKey: '12345',
-          userId: 123,
-          packageId: 12345,
-          lessonId: 12345,
           endAt: '2018-12-25 00:10:00',
         },
       });
@@ -373,7 +345,7 @@ describe('test/app/service/fact/learning.test.js', () => {
       assert(classroomFact.studentCount === newClassroomFact.studentCount);
     });
 
-    it('quit learning will deincrease the student size', async () => {
+    it('quit learning will decrease the student size', async () => {
       await ctx.service.fact.learning.beginLearning({
         category: 'keepwork',
         action: 'begin_learning',
@@ -392,11 +364,7 @@ describe('test/app/service/fact/learning.test.js', () => {
         category: 'keepwork',
         action: 'quit_learning',
         data: {
-          classroomKey: '12345',
           recordKey: '12345',
-          userId: 123,
-          packageId: 12345,
-          lessonId: 12345,
           endAt: '2018-12-25 00:10:00',
         },
       });

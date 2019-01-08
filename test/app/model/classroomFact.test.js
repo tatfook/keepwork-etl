@@ -171,8 +171,6 @@ describe('test/app/model/classroomFact.test.js', () => {
       const fact = await ctx.model.ClassroomFact.updateStudentCount({
         classroomKey: '12345',
         studentCount: 10,
-        packageId: 12345,
-        lessonId: 12345,
       });
 
       assert(fact.studentCount === 10);
@@ -183,59 +181,6 @@ describe('test/app/model/classroomFact.test.js', () => {
         await ctx.model.ClassroomFact.updateStudentCount({
           classroomKey: '12345',
           studentCount: -10,
-          packageId: 12345,
-          lessonId: 12345,
-        });
-      } catch (e) {
-        error = e;
-      }
-      assert(error);
-    });
-
-    it('should failed with invalid package id', async () => {
-      try {
-        await ctx.model.ClassroomFact.updateStudentCount({
-          classroomKey: '12345',
-          studentCount: 10,
-          packageId: 123456,
-          lessonId: 12345,
-        });
-      } catch (e) {
-        error = e;
-      }
-      assert(error);
-      error = undefined;
-      try {
-        await ctx.model.ClassroomFact.updateStudentCount({
-          classroomKey: '12345',
-          studentCount: 10,
-          teacherId: 123,
-          lessonId: 12345,
-        });
-      } catch (e) {
-        error = e;
-      }
-      assert(error);
-    });
-
-    it('should failed with invalid lesson id', async () => {
-      try {
-        await ctx.model.ClassroomFact.updateStudentCount({
-          classroomKey: '12345',
-          studentCount: 10,
-          packageId: 12345,
-          lessonId: 123456,
-        });
-      } catch (e) {
-        error = e;
-      }
-      assert(error);
-      error = undefined;
-      try {
-        await ctx.model.ClassroomFact.updateStudentCount({
-          classroomKey: '12345',
-          studentCount: 10,
-          packageId: 12345,
         });
       } catch (e) {
         error = e;
@@ -247,8 +192,6 @@ describe('test/app/model/classroomFact.test.js', () => {
       try {
         await ctx.model.ClassroomFact.updateStudentCount({
           studentCount: 10,
-          packageId: 12345,
-          lessonId: 12345,
         });
       } catch (e) {
         error = e;
@@ -272,8 +215,6 @@ describe('test/app/model/classroomFact.test.js', () => {
       let fact = await ctx.model.ClassroomFact.updateStudentCountWithDiff({
         classroomKey: '12345',
         diff: 10,
-        packageId: 12345,
-        lessonId: 12345,
       });
 
       assert(fact.studentCount === 10);
@@ -281,8 +222,6 @@ describe('test/app/model/classroomFact.test.js', () => {
       fact = await ctx.model.ClassroomFact.updateStudentCountWithDiff({
         classroomKey: '12345',
         diff: -5,
-        packageId: 12345,
-        lessonId: 12345,
       });
 
       assert(fact.studentCount === 5);
@@ -308,63 +247,10 @@ describe('test/app/model/classroomFact.test.js', () => {
       assert(error);
     });
 
-    it('should failed with invalid package id', async () => {
-      try {
-        await ctx.model.ClassroomFact.updateStudentCountWithDiff({
-          classroomKey: '12345',
-          diff: 10,
-          packageId: 123456,
-          lessonId: 12345,
-        });
-      } catch (e) {
-        error = e;
-      }
-      assert(error);
-      error = undefined;
-      try {
-        await ctx.model.ClassroomFact.updateStudentCountWithDiff({
-          classroomKey: '12345',
-          diff: 10,
-          teacherId: 123,
-          lessonId: 12345,
-        });
-      } catch (e) {
-        error = e;
-      }
-      assert(error);
-    });
-
-    it('should failed with invalid lesson id', async () => {
-      try {
-        await ctx.model.ClassroomFact.updateStudentCountWithDiff({
-          classroomKey: '12345',
-          diff: 10,
-          packageId: 12345,
-          lessonId: 123456,
-        });
-      } catch (e) {
-        error = e;
-      }
-      assert(error);
-      error = undefined;
-      try {
-        await ctx.model.ClassroomFact.updateStudentCountWithDiff({
-          classroomKey: '12345',
-          diff: 10,
-          packageId: 12345,
-        });
-      } catch (e) {
-        error = e;
-      }
-      assert(error);
-    });
-
     it('should failed with invalid classroomKey', async () => {
       try {
         await ctx.model.ClassroomFact.updateStudentCountWithDiff({
           diff: 10,
-          packageId: 12345,
-          lessonId: 12345,
         });
       } catch (e) {
         error = e;
@@ -389,8 +275,6 @@ describe('test/app/model/classroomFact.test.js', () => {
         classroomKey: '12345',
         endAt: '2018-12-24 00:30:00',
         studentCount: 10,
-        packageId: 12345,
-        lessonId: 12345,
       });
 
       assert(fact.endTimeId === 20181224);
@@ -403,8 +287,6 @@ describe('test/app/model/classroomFact.test.js', () => {
           classroomKey: '12345',
           endAt: '2150-12-24',
           teacherId: 123,
-          packageId: 12345,
-          lessonId: 12345,
         });
       } catch (e) {
         error = e;
@@ -415,63 +297,6 @@ describe('test/app/model/classroomFact.test.js', () => {
         await ctx.model.ClassroomFact.endClass({
           classroomKey: '12345',
           teacherId: 123,
-          packageId: 12345,
-          lessonId: 12345,
-        });
-      } catch (e) {
-        error = e;
-      }
-      assert(error);
-    });
-
-    it('should failed with invalid package id', async () => {
-      try {
-        await ctx.model.ClassroomFact.endClass({
-          classroomKey: '12345',
-          endAt: '2018-12-24',
-          studentCount: 10,
-          packageId: 123456,
-          lessonId: 12345,
-        });
-      } catch (e) {
-        error = e;
-      }
-      assert(error);
-      error = undefined;
-      try {
-        await ctx.model.ClassroomFact.endClass({
-          classroomKey: '12345',
-          endAt: '2018-12-24',
-          studentCount: 10,
-          teacherId: 123,
-          lessonId: 12345,
-        });
-      } catch (e) {
-        error = e;
-      }
-      assert(error);
-    });
-
-    it('should failed with invalid lesson id', async () => {
-      try {
-        await ctx.model.ClassroomFact.endClass({
-          classroomKey: '12345',
-          endAt: '2018-12-24',
-          studentCount: 10,
-          packageId: 12345,
-          lessonId: 123456,
-        });
-      } catch (e) {
-        error = e;
-      }
-      assert(error);
-      error = undefined;
-      try {
-        await ctx.model.ClassroomFact.endClass({
-          classroomKey: '12345',
-          endAt: '2018-12-24',
-          studentCount: 10,
-          packageId: 12345,
         });
       } catch (e) {
         error = e;
@@ -484,8 +309,6 @@ describe('test/app/model/classroomFact.test.js', () => {
         await ctx.model.ClassroomFact.endClass({
           studentCount: 10,
           endAt: '2018-12-24',
-          packageId: 12345,
-          lessonId: 12345,
         });
       } catch (e) {
         error = e;
