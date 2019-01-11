@@ -61,8 +61,29 @@ module.exports = app => {
   Model.getTimeByString = async timeString => {
     if (!timeString) throw new Error('Time cannot be null');
     const instance = await app.model.Time.findOne({ where: { id: moment(timeString).format('YYYYMMDD') } });
-    if (!instance) throw new Error('Invalid Time');
+    if (!instance) throw new Error('Invalid Time: ' + timeString);
     return instance;
+  };
+
+  Model.prototype.isWeekBegin = function() {
+    return this.dayOfWeek === 1;
+  };
+
+  Model.prototype.isMonthBegin = function() {
+    return this.day === 1;
+  };
+
+  Model.prototype.lastDayId = function() {
+    return moment(this.previousDay).format('YYYYMMDD');
+  };
+
+  Model.prototype.lastWeekId = function() {
+    return moment(this.date).subtract(1, 'weeks').format('YYYYMMDD');
+  };
+
+  Model.prototype.lastMonthId = function() {
+    return moment(this.date).subtract(1, 'months').endOf('month')
+      .format('YYYYMMDD');
   };
 
   return Model;

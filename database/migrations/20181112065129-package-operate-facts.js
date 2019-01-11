@@ -22,7 +22,7 @@ module.exports = {
         allowNull: false,
       },
       action: {
-        type: STRING(16),
+        type: STRING(64),
         allowNull: false,
       },
       remark: {

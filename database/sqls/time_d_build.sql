@@ -33,7 +33,7 @@ BEGIN
             DAY(v_date),
             WEEK(v_date, 3),
             QUARTER(v_date),
-            DAYOFWEEK(v_date),
+            WEEKDAY(v_date) + 1,
             DATE_FORMAT(v_date, "%j"),
             MONTHNAME(v_date),
             DAYNAME(v_date),

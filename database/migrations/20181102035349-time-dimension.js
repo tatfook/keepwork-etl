@@ -51,7 +51,7 @@ module.exports = {
     });
 
     await queryInterface.addIndex('times', { fields: [ 'date' ] });
-    await queryInterface.addIndex('times', { fields: [ 'year', 'month', 'day' ] });
+    await queryInterface.addIndex('times', { fields: [ 'year', 'month', 'week', 'day' ] });
     await queryInterface.addIndex('times', { fields: [ 'year', 'quarter' ] });
     await queryInterface.addIndex('times', { fields: [ 'year', 'dayOfWeek' ] });
   },

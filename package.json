@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "keepwork datawarehourse",
   "dependencies": {
-    "egg": "^2.10.0",
+    "egg": "^2.14.0",
     "egg-cors": "^2.1.1",
     "egg-kafkajs": "github:leopoldchen/egg-kafkajs#master",
     "egg-scripts": "^2.5.0",
