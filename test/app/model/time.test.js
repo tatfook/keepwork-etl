@@ -65,12 +65,21 @@ describe('test/app/model/time.test.js', () => {
     });
   });
 
-  describe('#isWeekBegin', () => {
+  describe('#isBeginOfWeek', () => {
     it('should return last day id', async () => {
       let day = await ctx.model.Time.getTimeByString('2019-01-06');
-      assert(day.isWeekBegin() === false);
+      assert(day.isBeginOfWeek() === false);
       day = await ctx.model.Time.getTimeByString('2019-01-07');
-      assert(day.isWeekBegin() === true);
+      assert(day.isBeginOfWeek() === true);
+    });
+  });
+
+  describe('#isBeginOfMonth', () => {
+    it('should return last day id', async () => {
+      let day = await ctx.model.Time.getTimeByString('2019-01-02');
+      assert(day.isBeginOfMonth() === false);
+      day = await ctx.model.Time.getTimeByString('2019-01-01');
+      assert(day.isBeginOfMonth() === true);
     });
   });
 

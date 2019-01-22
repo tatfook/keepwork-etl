@@ -65,16 +65,20 @@ module.exports = app => {
     return instance;
   };
 
-  Model.prototype.isWeekBegin = function() {
+  Model.prototype.isBeginOfWeek = function() {
     return this.dayOfWeek === 1;
   };
 
-  Model.prototype.isMonthBegin = function() {
+  Model.prototype.isBeginOfMonth = function() {
     return this.day === 1;
   };
 
   Model.prototype.lastDayId = function() {
     return moment(this.previousDay).format('YYYYMMDD');
+  };
+
+  Model.prototype.nextDayId = function() {
+    return moment(this.nextDay).format('YYYYMMDD');
   };
 
   Model.prototype.lastWeekId = function() {

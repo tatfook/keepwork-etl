@@ -45,7 +45,8 @@ describe('test/app/model/user.test.js', () => {
         email: 'hello@example.com',
       };
       const res = await ctx.model.User.updateFromEvent(data);
-      assert(res);
+      assert.ok(res);
+      assert(res.email === data.email);
     });
     it('should not update user with incorrect id', async () => {
       const data = {

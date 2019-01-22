@@ -64,7 +64,7 @@ describe('test/app/service//fact/package.test.js', () => {
   });
 
   describe('weekly snapshot', () => {
-    const day = '2019-01-01';
+    const day = '2019-01-22';
     beforeEach(async () => {
       const p = await ctx.model.Package.findOne({ attributes: [ 'id' ] });
       for (let i = 0; i < 14; i++) {
@@ -86,11 +86,9 @@ describe('test/app/service//fact/package.test.js', () => {
     });
 
     it('should create a new weekly snapshot', async () => {
-      const time = await ctx.model.Time.getTimeByString('2019-01-06');
+      const time = await ctx.model.Time.getTimeByString('2019-01-27');
       const p = await ctx.model.Package.findOne({ attributes: [ 'id' ] });
       const snapshot = await ctx.service.snapshot.package.buildWeeklySnapshot(p.id, time);
-
-      // console.log(snapshot.toJSON());
 
       assert.ok(snapshot);
       assert(snapshot.period === 'weekly');
@@ -99,7 +97,7 @@ describe('test/app/service//fact/package.test.js', () => {
       assert(Number(snapshot.newSubscribeCount) === 0);
       assert(Number(snapshot.subscribeCount) === 0);
 
-      const nextTime = await ctx.model.Time.getTimeByString('2019-01-13');
+      const nextTime = await ctx.model.Time.getTimeByString('2019-02-03');
       const nextSnapshot = await ctx.service.snapshot.package.buildWeeklySnapshot(p.id, nextTime);
       assert.ok(nextSnapshot);
       assert(nextSnapshot.period === 'weekly');
@@ -149,6 +147,89 @@ describe('test/app/service//fact/package.test.js', () => {
       assert(Number(nextSnapshot.teachingCount) === 59);
       assert(Number(nextSnapshot.newSubscribeCount) === 0);
       assert(Number(nextSnapshot.subscribeCount) === 0);
+    });
+  });
+
+  describe('build snapshot', () => {
+    const day = '2019-01-01';
+    beforeEach(async () => {
+      const p = await ctx.model.Package.findOne({ attributes: [ 'id' ] });
+      for (let i = 0; i < 60; i++) {
+        const tempDate = moment(day).add(i, 'days').format('YYYY-MM-DD');
+        await ctx.service.fact.learning.beginClass({
+          category: 'keepwork',
+          action: 'begin_class',
+          data: {
+            classroomKey: 12345 + i,
+            beginAt: tempDate,
+            teacherId: 123,
+            packageId: 12345,
+            lessonId: 12345,
+          },
+        });
+        if (i !== 0) {
+          const time = await ctx.model.Time.getTimeByString(tempDate);
+          await ctx.service.snapshot.package.build(p.id, time);
+        }
+      }
+    });
+
+    it('should build snapshots', async () => {
+      const p = await ctx.model.Package.findOne({ attributes: [ 'id' ] });
+      const dailySnapCount = await ctx.model.PackageSnapshot.count({
+        where: {
+          packageId: p.id,
+          period: 'daily',
+        },
+      });
+
+      assert(dailySnapCount === 59);
+      const weeklySnapCount = await ctx.model.PackageSnapshot.count({
+        where: {
+          packageId: p.id,
+          period: 'weekly',
+        },
+      });
+
+      assert(weeklySnapCount === 8);
+      const monthlySnapCount = await ctx.model.PackageSnapshot.count({
+        where: {
+          packageId: p.id,
+          period: 'monthly',
+        },
+      });
+
+      assert(monthlySnapCount === 2);
+
+      const dailySnapshot = await ctx.model.PackageSnapshot.findOne({
+        where: {
+          packageId: p.id,
+          period: 'daily',
+        },
+        order: [[ 'id', 'DESC' ]],
+      });
+      assert(dailySnapshot.newTeachingCount === 1);
+      assert(dailySnapshot.teachingCount === 59);
+
+      const weeklySnapshot = await ctx.model.PackageSnapshot.findOne({
+        where: {
+          packageId: p.id,
+          period: 'weekly',
+        },
+        order: [[ 'id', 'DESC' ]],
+      });
+      assert(weeklySnapshot.newTeachingCount === 7);
+      assert(weeklySnapshot.teachingCount === 55);
+
+      const monthlySnapshot = await ctx.model.PackageSnapshot.findOne({
+        where: {
+          packageId: p.id,
+          period: 'monthly',
+        },
+        order: [[ 'id', 'DESC' ]],
+      });
+      assert(monthlySnapshot.newTeachingCount === 28);
+      assert(monthlySnapshot.teachingCount === 59);
     });
   });
 });

@@ -57,7 +57,8 @@ module.exports = app => {
   Model.updateFromEvent = async data => {
     const params = _.pick(data, [ 'email', 'mobile', 'username', 'nickname', 'authPhone', 'age', 'gender' ]);
     const instance = await app.model.User.findOne({ where: { dKey: data.id }, order: [[ 'id', 'DESC' ]] });
-    return instance.update(params);
+    const res = await instance.update(params);
+    return res; // instance.update(params);
   };
 
   Model.upsertFromEvent = async data => {

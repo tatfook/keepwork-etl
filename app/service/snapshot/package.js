@@ -3,17 +3,17 @@
 const Service = require('egg').Service;
 
 class PackageSnapshotService extends Service {
-  async build(packageId) {
-    const today = await this.ctx.model.Time.today;
-    const lastDay = await this.ctx.model.Time.getTimeByString(today.lastDayId());
+  async build(packageId, day) {
+    if (!day) day = await this.ctx.model.Time.today();
+    const lastDay = await this.ctx.model.Time.getTimeByString(day.lastDayId());
     await this.service.snapshot.package.buildDailySnapshot(packageId, lastDay);
-    if (today.isWeekBegin()) {
+    if (day.isBeginOfWeek()) {
       // do weekly static for last week at the begin of this week
       await this.service.snapshot.package.buildWeeklySnapshot(packageId, lastDay);
     }
-    if (today.isMonthBegin()) {
+    if (day.isBeginOfMonth()) {
       // do monthly static for last month at the begin of this month
-      await this.service.snapshot.package.buildMonthlySnapshot(packageId, today);
+      await this.service.snapshot.package.buildMonthlySnapshot(packageId, lastDay);
     }
   }
 
@@ -54,19 +54,21 @@ class PackageSnapshotService extends Service {
       },
     });
 
-    const snapshot = await this.ctx.model.PackageSnapshot.create({
-      period,
-      timeId,
-      packageId,
+    const snapshot = await this.ctx.model.PackageSnapshot.findOrCreate({
+      where: {
+        period,
+        timeId,
+        packageId,
+      },
+    });
+    return await snapshot[0].update({
       newSubscribeCount,
       newTeachingCount,
       newLearningCount,
-      subscribeCount: lastSnapshot.subscribeCount + newSubscribeCount,
-      teachingCount: lastSnapshot.teachingCount + newTeachingCount,
-      learningCount: lastSnapshot.learningCount + newLearningCount,
+      subscribeCount: Number(lastSnapshot.subscribeCount) + Number(newSubscribeCount),
+      teachingCount: Number(lastSnapshot.teachingCount) + Number(newTeachingCount),
+      learningCount: Number(lastSnapshot.learningCount) + Number(newLearningCount),
     });
-
-    return snapshot;
   }
 
   async buildWeeklySnapshot(packageId, time) {
@@ -103,7 +105,6 @@ class PackageSnapshotService extends Service {
         where: {
           week: time.week,
           year: time.year,
-          month: time.month,
         },
       }],
       group: [ 'package_snapshots.packageId' ],
@@ -112,10 +113,15 @@ class PackageSnapshotService extends Service {
     const newTeachingCount = res[0].newTeachingCount;
     const newLearningCount = res[0].newLearningCount;
 
-    const snapshot = await this.ctx.model.PackageSnapshot.create({
-      period,
-      timeId,
-      packageId,
+    const snapshot = await this.ctx.model.PackageSnapshot.findOrCreate({
+      where: {
+        period,
+        timeId,
+        packageId,
+      },
+    });
+
+    return await snapshot[0].update({
       newSubscribeCount,
       newTeachingCount,
       newLearningCount,
@@ -123,8 +129,6 @@ class PackageSnapshotService extends Service {
       teachingCount: Number(lastSnapshot.teachingCount) + Number(newTeachingCount),
       learningCount: Number(lastSnapshot.learningCount) + Number(newLearningCount),
     });
-
-    return snapshot;
   }
 
   async buildMonthlySnapshot(packageId, time) {
@@ -169,10 +173,15 @@ class PackageSnapshotService extends Service {
     const newTeachingCount = res[0].newTeachingCount;
     const newLearningCount = res[0].newLearningCount;
 
-    const snapshot = await this.ctx.model.PackageSnapshot.create({
-      period,
-      timeId,
-      packageId,
+    const snapshot = await this.ctx.model.PackageSnapshot.findOrCreate({
+      where: {
+        period,
+        timeId,
+        packageId,
+      },
+    });
+
+    return await snapshot[0].update({
       newSubscribeCount,
       newTeachingCount,
       newLearningCount,
@@ -180,8 +189,6 @@ class PackageSnapshotService extends Service {
       teachingCount: Number(lastSnapshot.teachingCount) + Number(newTeachingCount),
       learningCount: Number(lastSnapshot.learningCount) + Number(newLearningCount),
     });
-
-    return snapshot;
   }
 }
 
