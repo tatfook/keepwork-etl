@@ -21,5 +21,7 @@ afterEach(async () => {
     app.model.TestQuestionFact.destroy({ truncate: true, force: true }),
 
     app.model.PackageSnapshot.destroy({ truncate: true, force: true }),
+    app.model.PackageLessonSnapshot.destroy({ truncate: true, force: true }),
+    app.model.LessonSnapshot.destroy({ truncate: true, force: true }),
   ]);
 });

@@ -2,7 +2,7 @@
 
 module.exports = app => {
   const { BIGINT, STRING, DATE } = app.Sequelize;
-  const Model = app.model.define('lesson_snapshots', {
+  const Model = app.model.define('package_lesson_snapshots', {
     id: {
       type: BIGINT,
       autoIncrement: true,
@@ -12,6 +12,10 @@ module.exports = app => {
       type: STRING(16),
     },
     timeId: {
+      type: BIGINT,
+      allowNull: false,
+    },
+    packageId: {
       type: BIGINT,
       allowNull: false,
     },
@@ -46,8 +50,9 @@ module.exports = app => {
   });
 
   Model.associate = () => {
-    app.model.LessonSnapshot.belongsTo(app.model.Time);
-    app.model.LessonSnapshot.belongsTo(app.model.Lesson);
+    app.model.PackageLessonSnapshot.belongsTo(app.model.Time);
+    app.model.PackageLessonSnapshot.belongsTo(app.model.Package);
+    app.model.PackageLessonSnapshot.belongsTo(app.model.Lesson);
   };
 
   return Model;

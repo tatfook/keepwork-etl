@@ -3,7 +3,7 @@
 const { app, assert } = require('egg-mock/bootstrap');
 const moment = require('moment');
 
-describe('test/app/service/snapshot/package.test.js', () => {
+describe('test/app/service/snapshot/packageLesson.test.js', () => {
   let ctx;
   //   let error;
   beforeEach(async () => {
@@ -19,28 +19,58 @@ describe('test/app/service/snapshot/package.test.js', () => {
       id: 12345,
       userId: 123,
     });
+    await app.model.Lesson.createFromEvent({
+      id: 12346,
+      userId: 123,
+    });
   });
 
   describe('daily snapshot', () => {
     const day = '2019-01-09';
     const nextDay = '2019-01-10';
     beforeEach(async () => {
-      await ctx.service.fact.package.commonOperate({
+      await ctx.service.fact.learning.beginClass({
         category: 'keepwork',
-        action: 'subscribe_package',
+        action: 'begin_class',
         data: {
-          operateAt: day,
-          userId: 123,
+          classroomKey: 12345,
+          beginAt: day,
+          teacherId: 123,
           packageId: 12345,
+          lessonId: 12345,
         },
       });
-      await ctx.service.fact.package.commonOperate({
+      await ctx.service.fact.learning.beginClass({
         category: 'keepwork',
-        action: 'subscribe_package',
+        action: 'begin_class',
         data: {
-          operateAt: nextDay,
-          userId: 12345,
+          classroomKey: 12346,
+          beginAt: nextDay,
+          teacherId: 123,
           packageId: 12345,
+          lessonId: 12345,
+        },
+      });
+      await ctx.service.fact.learning.beginClass({
+        category: 'keepwork',
+        action: 'begin_class',
+        data: {
+          classroomKey: 12347,
+          beginAt: day,
+          teacherId: 123,
+          packageId: 12345,
+          lessonId: 12346,
+        },
+      });
+      await ctx.service.fact.learning.beginClass({
+        category: 'keepwork',
+        action: 'begin_class',
+        data: {
+          classroomKey: 12348,
+          beginAt: nextDay,
+          teacherId: 123,
+          packageId: 12345,
+          lessonId: 12346,
         },
       });
     });
@@ -48,18 +78,35 @@ describe('test/app/service/snapshot/package.test.js', () => {
     it('should create a new daily snapshot', async () => {
       const time = await ctx.model.Time.getTimeByString(day);
       const p = await ctx.model.Package.findOne({ attributes: [ 'id' ] });
-      const snapshot = await ctx.service.snapshot.package.buildDailySnapshot(p.id, time);
+      const l = await ctx.model.Lesson.findOne({ attributes: [ 'id' ] });
+      const snapshot = await ctx.service.snapshot.packageLesson.buildDailySnapshot(p.id, l.id, time);
 
       assert(snapshot.period === 'daily');
-      assert(snapshot.newSubscribeCount === 1);
-      assert(snapshot.subscribeCount === 1);
-      assert(snapshot.newTeachingCount === 0);
+      assert(snapshot.newTeachingCount === 1);
+      assert(snapshot.teachingCount === 1);
 
       const nextTime = await ctx.model.Time.getTimeByString(nextDay);
-      const nextSnapshot = await ctx.service.snapshot.package.buildDailySnapshot(p.id, nextTime);
+      const nextSnapshot = await ctx.service.snapshot.packageLesson.buildDailySnapshot(p.id, l.id, nextTime);
       assert(nextSnapshot.period === 'daily');
-      assert(nextSnapshot.newSubscribeCount === 1);
-      assert(nextSnapshot.subscribeCount === 2);
+      assert(nextSnapshot.newTeachingCount === 1);
+      assert(nextSnapshot.teachingCount === 2);
+    });
+
+    it('should create a new daily snapshot for another lesson', async () => {
+      const time = await ctx.model.Time.getTimeByString(day);
+      const p = await ctx.model.Package.findOne({ attributes: [ 'id' ] });
+      const l = await ctx.model.Lesson.findOne({ attributes: [ 'id' ], order: [[ 'id', 'desc' ]] });
+      const snapshot = await ctx.service.snapshot.packageLesson.buildDailySnapshot(p.id, l.id, time);
+
+      assert(snapshot.period === 'daily');
+      assert(snapshot.newTeachingCount === 1);
+      assert(snapshot.teachingCount === 1);
+
+      const nextTime = await ctx.model.Time.getTimeByString(nextDay);
+      const nextSnapshot = await ctx.service.snapshot.packageLesson.buildDailySnapshot(p.id, l.id, nextTime);
+      assert(nextSnapshot.period === 'daily');
+      assert(nextSnapshot.newTeachingCount === 1);
+      assert(nextSnapshot.teachingCount === 2);
     });
   });
 
@@ -67,6 +114,7 @@ describe('test/app/service/snapshot/package.test.js', () => {
     const day = '2019-01-22';
     beforeEach(async () => {
       const p = await ctx.model.Package.findOne({ attributes: [ 'id' ] });
+      const l = await ctx.model.Lesson.findOne({ attributes: [ 'id' ] });
       for (let i = 0; i < 14; i++) {
         const tempDate = moment(day).add(i, 'days').format('YYYY-MM-DD');
         await ctx.service.fact.learning.beginClass({
@@ -81,36 +129,38 @@ describe('test/app/service/snapshot/package.test.js', () => {
           },
         });
         const time = await ctx.model.Time.getTimeByString(tempDate);
-        await ctx.service.snapshot.package.buildDailySnapshot(p.id, time);
+        await ctx.service.snapshot.packageLesson.buildDailySnapshot(p.id, l.id, time);
       }
     });
 
     it('should create a new weekly snapshot', async () => {
       const time = await ctx.model.Time.getTimeByString('2019-01-27');
       const p = await ctx.model.Package.findOne({ attributes: [ 'id' ] });
-      const snapshot = await ctx.service.snapshot.package.buildWeeklySnapshot(p.id, time);
+      const l = await ctx.model.Lesson.findOne({ attributes: [ 'id' ] });
+      const snapshot = await ctx.service.snapshot.packageLesson.buildWeeklySnapshot(p.id, l.id, time);
 
       assert.ok(snapshot);
       assert(snapshot.period === 'weekly');
       assert(Number(snapshot.newTeachingCount) === 6);
       assert(Number(snapshot.teachingCount) === 6);
-      assert(Number(snapshot.newSubscribeCount) === 0);
-      assert(Number(snapshot.subscribeCount) === 0);
+      assert(Number(snapshot.newLearningCount) === 0);
+      assert(Number(snapshot.learningCount) === 0);
 
       const nextTime = await ctx.model.Time.getTimeByString('2019-02-03');
-      const nextSnapshot = await ctx.service.snapshot.package.buildWeeklySnapshot(p.id, nextTime);
+      const nextSnapshot = await ctx.service.snapshot.packageLesson.buildWeeklySnapshot(p.id, l.id, nextTime);
       assert.ok(nextSnapshot);
       assert(nextSnapshot.period === 'weekly');
       assert(Number(nextSnapshot.newTeachingCount) === 7);
       assert(Number(nextSnapshot.teachingCount) === 13);
-      assert(Number(nextSnapshot.newSubscribeCount) === 0);
-      assert(Number(nextSnapshot.subscribeCount) === 0);
+      assert(Number(nextSnapshot.newLearningCount) === 0);
+      assert(Number(nextSnapshot.learningCount) === 0);
     });
   });
   describe('monthly snapshot', () => {
     const day = '2019-01-01';
     beforeEach(async () => {
       const p = await ctx.model.Package.findOne({ attributes: [ 'id' ] });
+      const l = await ctx.model.Lesson.findOne({ attributes: [ 'id' ] });
       for (let i = 0; i < 60; i++) {
         const tempDate = moment(day).add(i, 'days').format('YYYY-MM-DD');
         await ctx.service.fact.learning.beginClass({
@@ -125,28 +175,29 @@ describe('test/app/service/snapshot/package.test.js', () => {
           },
         });
         const time = await ctx.model.Time.getTimeByString(tempDate);
-        await ctx.service.snapshot.package.buildDailySnapshot(p.id, time);
+        await ctx.service.snapshot.packageLesson.buildDailySnapshot(p.id, l.id, time);
       }
     });
 
     it('should create a new monthly snapshot', async () => {
       const time = await ctx.model.Time.getTimeByString('2019-01-31');
       const p = await ctx.model.Package.findOne({ attributes: [ 'id' ] });
-      const snapshot = await ctx.service.snapshot.package.buildMonthlySnapshot(p.id, time);
+      const l = await ctx.model.Lesson.findOne({ attributes: [ 'id' ] });
+      const snapshot = await ctx.service.snapshot.packageLesson.buildMonthlySnapshot(p.id, l.id, time);
 
       assert(snapshot.period === 'monthly');
       assert(Number(snapshot.newTeachingCount) === 31);
       assert(Number(snapshot.teachingCount) === 31);
-      assert(Number(snapshot.newSubscribeCount) === 0);
-      assert(Number(snapshot.subscribeCount) === 0);
+      assert(Number(snapshot.newLearningCount) === 0);
+      assert(Number(snapshot.learningCount) === 0);
 
       const nextTime = await ctx.model.Time.getTimeByString('2019-02-28');
-      const nextSnapshot = await ctx.service.snapshot.package.buildMonthlySnapshot(p.id, nextTime);
+      const nextSnapshot = await ctx.service.snapshot.packageLesson.buildMonthlySnapshot(p.id, l.id, nextTime);
       assert(nextSnapshot.period === 'monthly');
       assert(Number(nextSnapshot.newTeachingCount) === 28);
       assert(Number(nextSnapshot.teachingCount) === 59);
-      assert(Number(nextSnapshot.newSubscribeCount) === 0);
-      assert(Number(nextSnapshot.subscribeCount) === 0);
+      assert(Number(nextSnapshot.newLearningCount) === 0);
+      assert(Number(nextSnapshot.learningCount) === 0);
     });
   });
 
@@ -154,6 +205,7 @@ describe('test/app/service/snapshot/package.test.js', () => {
     const day = '2019-01-01';
     beforeEach(async () => {
       const p = await ctx.model.Package.findOne({ attributes: [ 'id' ] });
+      const l = await ctx.model.Lesson.findOne({ attributes: [ 'id' ] });
       for (let i = 0; i < 60; i++) {
         const tempDate = moment(day).add(i, 'days').format('YYYY-MM-DD');
         await ctx.service.fact.learning.beginClass({
@@ -169,41 +221,46 @@ describe('test/app/service/snapshot/package.test.js', () => {
         });
         if (i !== 0) {
           const time = await ctx.model.Time.getTimeByString(tempDate);
-          await ctx.service.snapshot.package.build(p.id, time);
+          await ctx.service.snapshot.packageLesson.build(p.id, l.id, time);
         }
       }
     });
 
     it('should build snapshots', async () => {
       const p = await ctx.model.Package.findOne({ attributes: [ 'id' ] });
-      const dailySnapCount = await ctx.model.PackageSnapshot.count({
+      const l = await ctx.model.Lesson.findOne({ attributes: [ 'id' ] });
+      const dailySnapCount = await ctx.model.PackageLessonSnapshot.count({
         where: {
           packageId: p.id,
+          lessonId: l.id,
           period: 'daily',
         },
       });
 
       assert(dailySnapCount === 59);
-      const weeklySnapCount = await ctx.model.PackageSnapshot.count({
+      const weeklySnapCount = await ctx.model.PackageLessonSnapshot.count({
         where: {
           packageId: p.id,
+          lessonId: l.id,
           period: 'weekly',
         },
       });
 
       assert(weeklySnapCount === 8);
-      const monthlySnapCount = await ctx.model.PackageSnapshot.count({
+      const monthlySnapCount = await ctx.model.PackageLessonSnapshot.count({
         where: {
           packageId: p.id,
+          lessonId: l.id,
           period: 'monthly',
         },
       });
 
       assert(monthlySnapCount === 2);
 
-      const dailySnapshot = await ctx.model.PackageSnapshot.findOne({
+      const dailySnapshot = await ctx.model.PackageLessonSnapshot.findOne({
         where: {
           packageId: p.id,
+          lessonId: l.id,
           period: 'daily',
         },
         order: [[ 'id', 'DESC' ]],
@@ -211,9 +268,10 @@ describe('test/app/service/snapshot/package.test.js', () => {
       assert(dailySnapshot.newTeachingCount === 1);
       assert(dailySnapshot.teachingCount === 59);
 
-      const weeklySnapshot = await ctx.model.PackageSnapshot.findOne({
+      const weeklySnapshot = await ctx.model.PackageLessonSnapshot.findOne({
         where: {
           packageId: p.id,
+          lessonId: l.id,
           period: 'weekly',
         },
         order: [[ 'id', 'DESC' ]],
@@ -221,9 +279,10 @@ describe('test/app/service/snapshot/package.test.js', () => {
       assert(weeklySnapshot.newTeachingCount === 7);
       assert(weeklySnapshot.teachingCount === 55);
 
-      const monthlySnapshot = await ctx.model.PackageSnapshot.findOne({
+      const monthlySnapshot = await ctx.model.PackageLessonSnapshot.findOne({
         where: {
           packageId: p.id,
+          lessonId: l.id,
           period: 'monthly',
         },
         order: [[ 'id', 'DESC' ]],

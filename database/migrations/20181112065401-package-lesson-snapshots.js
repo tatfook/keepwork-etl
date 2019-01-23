@@ -3,7 +3,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const { BIGINT, STRING, DATE } = Sequelize;
-    await queryInterface.createTable('lesson_snapshots', {
+    await queryInterface.createTable('package_lesson_snapshots', {
       id: {
         type: BIGINT,
         autoIncrement: true,
@@ -13,6 +13,10 @@ module.exports = {
         type: STRING(16),
       },
       timeId: {
+        type: BIGINT,
+        allowNull: false,
+      },
+      packageId: {
         type: BIGINT,
         allowNull: false,
       },
@@ -46,12 +50,12 @@ module.exports = {
       underscored: false,
     });
 
-    await queryInterface.addIndex('lesson_snapshots', { fields: [ 'period', 'timeId', 'lessonId' ], name: 'indexOfDimesion' });
-    await queryInterface.addIndex('lesson_snapshots', { fields: [ 'teachingCount', 'learningCount', 'newTeachingCount', 'newLearningCount' ], name: 'indexOfLearning' });
+    await queryInterface.addIndex('package_lesson_snapshots', { fields: [ 'period', 'timeId', 'packageId', 'lessonId' ], name: 'indexOfDimesion' });
+    await queryInterface.addIndex('package_lesson_snapshots', { fields: [ 'teachingCount', 'learningCount', 'newTeachingCount', 'newLearningCount' ], name: 'indexOfLearning' });
 
   },
 
   down: queryInterface => {
-    return queryInterface.dropTable('lesson_snapshots');
+    return queryInterface.dropTable('package_lesson_snapshots');
   },
 };
