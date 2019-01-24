@@ -50,5 +50,30 @@ module.exports = app => {
     app.model.LessonSnapshot.belongsTo(app.model.Lesson);
   };
 
+  Model.upsertWithData = async data => {
+    const {
+      period,
+      timeId,
+      lessonId,
+      newTeachingCount,
+      newLearningCount,
+      teachingCount,
+      learningCount,
+    } = data;
+    const snapshot = await app.model.LessonSnapshot.findOrCreate({
+      where: {
+        period,
+        timeId,
+        lessonId,
+      },
+    });
+    return await snapshot[0].update({
+      newTeachingCount,
+      newLearningCount,
+      teachingCount,
+      learningCount,
+    });
+  };
+
   return Model;
 };

@@ -71,15 +71,10 @@ class PackageSnapshotService extends Service {
         beginTimeId: timeId,
       },
     });
-
-    const snapshot = await this.ctx.model.PackageSnapshot.findOrCreate({
-      where: {
-        period,
-        timeId,
-        packageId,
-      },
-    });
-    return await snapshot[0].update({
+    return await this.ctx.model.PackageSnapshot.upsertWithData({
+      period,
+      timeId,
+      packageId,
       newSubscribeCount,
       newTeachingCount,
       newLearningCount,
@@ -90,122 +85,112 @@ class PackageSnapshotService extends Service {
   }
 
   async buildWeeklySnapshot(packageId, time) {
-    const { fn, col } = this.ctx.app.Sequelize;
     const period = 'weekly';
     const timeId = time.id;
+    const weekEndDaySnapshot = await this.ctx.model.PackageSnapshot.findOne({
+      where: {
+        packageId,
+        timeId: time.weekEndDayId(),
+        period: 'daily',
+      },
+    });
+    if (!weekEndDaySnapshot) {
+      return await this.ctx.model.PackageSnapshot.upsertWithData({
+        period,
+        timeId,
+        packageId,
+        newSubscribeCount: 0,
+        newTeachingCount: 0,
+        newLearningCount: 0,
+        teachingCount: 0,
+        learningCount: 0,
+        subscribeCount: 0,
+      });
+    }
     let lastSnapshot = await this.ctx.model.PackageSnapshot.findOne({
       where: {
-        timeId: time.lastWeekId(),
         packageId,
-        period,
+        timeId: time.lastWeekEndDayId(),
+        period: 'weekly',
       },
     });
     if (!lastSnapshot) {
       lastSnapshot = {
-        subscribeCount: 0,
         teachingCount: 0,
         learningCount: 0,
+        subscribeCount: 0,
       };
     }
-    const res = await this.ctx.model.PackageSnapshot.findAll({
-      attributes: [
-        [ fn('SUM', col('newSubscribeCount')), 'newSubscribeCount' ],
-        [ fn('SUM', col('newTeachingCount')), 'newTeachingCount' ],
-        [ fn('SUM', col('newLearningCount')), 'newLearningCount' ],
-      ],
-      where: {
-        packageId,
-        period: 'daily',
-      },
-      include: [{
-        model: this.ctx.model.Time,
-        attributes: [ ],
-        where: {
-          week: time.week,
-          year: time.year,
-        },
-      }],
-      group: [ 'package_snapshots.packageId' ],
-    });
-    const newSubscribeCount = res[0].newSubscribeCount;
-    const newTeachingCount = res[0].newTeachingCount;
-    const newLearningCount = res[0].newLearningCount;
 
-    const snapshot = await this.ctx.model.PackageSnapshot.findOrCreate({
-      where: {
-        period,
-        timeId,
-        packageId,
-      },
-    });
+    const newTeachingCount = Number(weekEndDaySnapshot.teachingCount) - Number(lastSnapshot.teachingCount);
+    const newLearningCount = Number(weekEndDaySnapshot.learningCount) - Number(lastSnapshot.learningCount);
+    const newSubscribeCount = Number(weekEndDaySnapshot.subscribeCount) - Number(lastSnapshot.subscribeCount);
 
-    return await snapshot[0].update({
-      newSubscribeCount,
+    return await this.ctx.model.PackageSnapshot.upsertWithData({
+      period,
+      timeId,
+      packageId,
       newTeachingCount,
       newLearningCount,
-      subscribeCount: Number(lastSnapshot.subscribeCount) + Number(newSubscribeCount),
-      teachingCount: Number(lastSnapshot.teachingCount) + Number(newTeachingCount),
-      learningCount: Number(lastSnapshot.learningCount) + Number(newLearningCount),
+      newSubscribeCount,
+      teachingCount: weekEndDaySnapshot.teachingCount,
+      learningCount: weekEndDaySnapshot.learningCount,
+      subscribeCount: weekEndDaySnapshot.subscribeCount,
     });
   }
 
   async buildMonthlySnapshot(packageId, time) {
-    const { fn, col } = this.ctx.app.Sequelize;
     const period = 'monthly';
     const timeId = time.id;
+    const monthEndDaySnapshot = await this.ctx.model.PackageSnapshot.findOne({
+      where: {
+        packageId,
+        timeId: time.monthEndDayId(),
+        period: 'daily',
+      },
+    });
+    if (!monthEndDaySnapshot) {
+      return await this.ctx.model.PackageSnapshot.upsertWithData({
+        period,
+        timeId,
+        packageId,
+        newSubscribeCount: 0,
+        newTeachingCount: 0,
+        newLearningCount: 0,
+        teachingCount: 0,
+        learningCount: 0,
+        subscribeCount: 0,
+      });
+    }
     let lastSnapshot = await this.ctx.model.PackageSnapshot.findOne({
       where: {
-        timeId: time.lastMonthId(),
         packageId,
-        period,
+        timeId: time.lastMonthEndDayId(),
+        period: 'monthly',
       },
     });
     if (!lastSnapshot) {
       lastSnapshot = {
-        subscribeCount: 0,
         teachingCount: 0,
         learningCount: 0,
+        subscribeCount: 0,
       };
     }
-    const res = await this.ctx.model.PackageSnapshot.findAll({
-      attributes: [
-        [ fn('SUM', col('newSubscribeCount')), 'newSubscribeCount' ],
-        [ fn('SUM', col('newTeachingCount')), 'newTeachingCount' ],
-        [ fn('SUM', col('newLearningCount')), 'newLearningCount' ],
-      ],
-      where: {
-        packageId,
-        period: 'daily',
-      },
-      include: [{
-        model: this.ctx.model.Time,
-        attributes: [ ],
-        where: {
-          year: time.year,
-          month: time.month,
-        },
-      }],
-      group: [ 'package_snapshots.packageId' ],
-    });
-    const newSubscribeCount = res[0].newSubscribeCount;
-    const newTeachingCount = res[0].newTeachingCount;
-    const newLearningCount = res[0].newLearningCount;
 
-    const snapshot = await this.ctx.model.PackageSnapshot.findOrCreate({
-      where: {
-        period,
-        timeId,
-        packageId,
-      },
-    });
+    const newTeachingCount = Number(monthEndDaySnapshot.teachingCount) - Number(lastSnapshot.teachingCount);
+    const newLearningCount = Number(monthEndDaySnapshot.learningCount) - Number(lastSnapshot.learningCount);
+    const newSubscribeCount = Number(monthEndDaySnapshot.subscribeCount) - Number(lastSnapshot.subscribeCount);
 
-    return await snapshot[0].update({
-      newSubscribeCount,
+    return await this.ctx.model.PackageSnapshot.upsertWithData({
+      period,
+      timeId,
+      packageId,
       newTeachingCount,
       newLearningCount,
-      subscribeCount: Number(lastSnapshot.subscribeCount) + Number(newSubscribeCount),
-      teachingCount: Number(lastSnapshot.teachingCount) + Number(newTeachingCount),
-      learningCount: Number(lastSnapshot.learningCount) + Number(newLearningCount),
+      newSubscribeCount,
+      teachingCount: monthEndDaySnapshot.teachingCount,
+      learningCount: monthEndDaySnapshot.learningCount,
+      subscribeCount: monthEndDaySnapshot.subscribeCount,
     });
   }
 }

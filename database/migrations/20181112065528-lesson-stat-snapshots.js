@@ -48,15 +48,15 @@ module.exports = {
         type: BIGINT,
         defaultValue: 0,
       },
-      totalLearners: {
+      totalQuestions: {
+        type: BIGINT,
+        defaultValue: 0,
+      },
+      newQuestions: {
         type: BIGINT,
         defaultValue: 0,
       },
       totalTestQuestions: {
-        type: BIGINT,
-        defaultValue: 0,
-      },
-      newLearners: {
         type: BIGINT,
         defaultValue: 0,
       },
@@ -75,8 +75,6 @@ module.exports = {
     });
 
     await queryInterface.addIndex('lesson_stat_snapshots', { fields: [ 'period', 'timeId' ], name: 'indexOfDimesion' });
-    await queryInterface.addIndex('lesson_stat_snapshots', { fields: [ 'totalLearners', 'newLearners' ], name: 'indexOfLearning' });
-    await queryInterface.addIndex('lesson_stat_snapshots', { fields: [ 'totalTestQuestions', 'newTestQuestions' ], name: 'indexOfQuiz' });
 
   },
 

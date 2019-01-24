@@ -15,6 +15,7 @@ class PackageSnapshot extends Subscription {
     await this.ctx.service.snapshot.package.buildAll(today);
     await this.ctx.service.snapshot.packageLesson.buildAll(today);
     await this.ctx.service.snapshot.lesson.buildAll(today);
+    await this.ctx.service.snapshot.lessonStat.build(today);
   }
 }
 

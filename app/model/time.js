@@ -81,12 +81,39 @@ module.exports = app => {
     return moment(this.nextDay).format('YYYYMMDD');
   };
 
-  Model.prototype.lastWeekId = function() {
-    return moment(this.date).subtract(1, 'weeks').format('YYYYMMDD');
+  Model.prototype.weekEndDayId = function() {
+    return moment(this.date).endOf('isoWeek').format('YYYYMMDD');
   };
 
-  Model.prototype.lastMonthId = function() {
+  Model.prototype.weekStartDayId = function() {
+    return moment(this.date).startOf('isoWeek').format('YYYYMMDD');
+  };
+
+  Model.prototype.monthEndDayId = function() {
+    return moment(this.date).endOf('month').format('YYYYMMDD');
+  };
+
+  Model.prototype.monthStartDayId = function() {
+    return moment(this.date).startOf('month').format('YYYYMMDD');
+  };
+
+  Model.prototype.lastWeekEndDayId = function() {
+    return moment(this.date).subtract(1, 'weeks').endOf('isoWeek')
+      .format('YYYYMMDD');
+  };
+
+  Model.prototype.lastWeekStartDayId = function() {
+    return moment(this.date).subtract(1, 'weeks').startOf('isoWeek')
+      .format('YYYYMMDD');
+  };
+
+  Model.prototype.lastMonthEndDayId = function() {
     return moment(this.date).subtract(1, 'months').endOf('month')
+      .format('YYYYMMDD');
+  };
+
+  Model.prototype.lastMonthStartDayId = function() {
+    return moment(this.date).subtract(1, 'months').startOf('month')
       .format('YYYYMMDD');
   };
 

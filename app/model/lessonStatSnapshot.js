@@ -47,15 +47,15 @@ module.exports = app => {
       type: BIGINT,
       defaultValue: 0,
     },
-    totalLearners: {
+    totalQuestions: {
+      type: BIGINT,
+      defaultValue: 0,
+    },
+    newQuestions: {
       type: BIGINT,
       defaultValue: 0,
     },
     totalTestQuestions: {
-      type: BIGINT,
-      defaultValue: 0,
-    },
-    newLearners: {
       type: BIGINT,
       defaultValue: 0,
     },
@@ -75,6 +75,45 @@ module.exports = app => {
 
   Model.associate = () => {
     app.model.LessonStatSnapshot.belongsTo(app.model.Time);
+  };
+
+  Model.upsertWithData = async data => {
+    const {
+      period,
+      timeId,
+      totalPackages,
+      newPackages,
+      totalPassedPackages,
+      newPassedPackages,
+      totalReviewingPackages,
+      newReviewingPackages,
+      totalLessons,
+      newLessons,
+      totalQuestions,
+      newQuestions,
+      totalTestQuestions,
+      newTestQuestions,
+    } = data;
+    const snapshot = await app.model.LessonStatSnapshot.findOrCreate({
+      where: {
+        period,
+        timeId,
+      },
+    });
+    return await snapshot[0].update({
+      totalPackages,
+      newPackages,
+      totalPassedPackages,
+      newPassedPackages,
+      totalReviewingPackages,
+      newReviewingPackages,
+      totalLessons,
+      newLessons,
+      totalQuestions,
+      newQuestions,
+      totalTestQuestions,
+      newTestQuestions,
+    });
   };
 
   return Model;

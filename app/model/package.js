@@ -54,7 +54,7 @@ module.exports = app => {
   };
 
   Model.createFromEvent = async data => {
-    const params = _.pick(data, [ 'userId', 'name', 'subjectName', 'subjectId', 'minAge', 'maxAge', 'lessonCount', 'state' ]);
+    const params = _.pick(data, [ 'userId', 'name', 'subjectName', 'subjectId', 'minAge', 'maxAge', 'lessonCount', 'state', 'createdAt' ]);
     params.dKey = data.id;
     const user = await app.model.User.findOne({ where: { dKey: params.userId }, order: [[ 'id', 'DESC' ]] });
     params.userId = user.id;

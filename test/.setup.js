@@ -10,7 +10,6 @@ afterEach(async () => {
   await Promise.all([
     // define your own model.destroy here
     app.model.User.destroy({ truncate: true, force: true }),
-    app.model.LessonUser.destroy({ truncate: true, force: true }),
     app.model.Package.destroy({ truncate: true, force: true }),
     app.model.Lesson.destroy({ truncate: true, force: true }),
     app.model.Question.destroy({ truncate: true, force: true }),
@@ -24,5 +23,6 @@ afterEach(async () => {
     app.model.PackageSnapshot.destroy({ truncate: true, force: true }),
     app.model.PackageLessonSnapshot.destroy({ truncate: true, force: true }),
     app.model.LessonSnapshot.destroy({ truncate: true, force: true }),
+    app.model.LessonStatSnapshot.destroy({ truncate: true, force: true }),
   ]);
 });

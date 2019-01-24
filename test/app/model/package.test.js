@@ -1,6 +1,7 @@
 'use strict';
 
 const { app, assert } = require('egg-mock/bootstrap');
+const moment = require('moment');
 
 describe('test/app/model/package.test.js', () => {
   let ctx;
@@ -16,9 +17,11 @@ describe('test/app/model/package.test.js', () => {
       const data = {
         id: 12345,
         userId: 123,
+        createdAt: '2019-01-24',
       };
       const res = await ctx.model.Package.createFromEvent(data);
-      assert(res);
+      assert.ok(res);
+      assert(moment(res.createdAt).format('YYYY-MM-DD') === '2019-01-24');
     });
 
     it('should not create package without id', async () => {

@@ -8,7 +8,11 @@ class LessonSnapshotService extends Service {
     const limit = 100; // process 100 snapshot per loop
     let offset = 0;
     const attributes = [ 'id' ];
-    let res = await this.ctx.model.Lesson.findAndCount({ attributes, limit, offset });
+    let res = await this.ctx.model.Lesson.findAndCount({
+      attributes,
+      limit,
+      offset,
+    });
     const count = res.count;
     const lessons = res.rows;
 
@@ -17,7 +21,11 @@ class LessonSnapshotService extends Service {
         return this.ctx.service.snapshot.lesson.build(l.id, day);
       }));
       offset += limit;
-      res = await this.ctx.model.Lesson.findAndCount({ attributes, limit, offset });
+      res = await this.ctx.model.Lesson.findAndCount({
+        attributes,
+        limit,
+        offset,
+      });
     }
   }
 
@@ -63,15 +71,10 @@ class LessonSnapshotService extends Service {
         beginTimeId: timeId,
       },
     });
-
-    const snapshot = await this.ctx.model.LessonSnapshot.findOrCreate({
-      where: {
-        period,
-        timeId,
-        lessonId,
-      },
-    });
-    return await snapshot[0].update({
+    return await this.ctx.model.LessonSnapshot.upsertWithData({
+      period,
+      timeId,
+      lessonId,
       newTeachingCount,
       newLearningCount,
       teachingCount: Number(lastSnapshot.teachingCount) + Number(newTeachingCount),
@@ -80,14 +83,23 @@ class LessonSnapshotService extends Service {
   }
 
   async buildWeeklySnapshot(lessonId, time) {
-    const { fn, col } = this.ctx.app.Sequelize;
     const period = 'weekly';
     const timeId = time.id;
+    const weekEndDaySnapshot = await this.ctx.model.LessonSnapshot.findOne({
+      where: {
+        lessonId,
+        timeId: time.weekEndDayId(),
+        period: 'daily',
+      },
+    });
+    if (!weekEndDaySnapshot) {
+      throw new Error('Should build daily snapshot first!');
+    }
     let lastSnapshot = await this.ctx.model.LessonSnapshot.findOne({
       where: {
-        timeId: time.lastWeekId(),
         lessonId,
-        period,
+        timeId: time.lastWeekEndDayId(),
+        period: 'weekly',
       },
     });
     if (!lastSnapshot) {
@@ -96,53 +108,39 @@ class LessonSnapshotService extends Service {
         learningCount: 0,
       };
     }
-    const res = await this.ctx.model.LessonSnapshot.findAll({
-      attributes: [
-        [ fn('SUM', col('newTeachingCount')), 'newTeachingCount' ],
-        [ fn('SUM', col('newLearningCount')), 'newLearningCount' ],
-      ],
-      where: {
-        lessonId,
-        period: 'daily',
-      },
-      include: [{
-        model: this.ctx.model.Time,
-        attributes: [ ],
-        where: {
-          week: time.week,
-          year: time.year,
-        },
-      }],
-      group: [ 'lesson_snapshots.lessonId' ],
-    });
-    const newTeachingCount = res[0].newTeachingCount;
-    const newLearningCount = res[0].newLearningCount;
 
-    const snapshot = await this.ctx.model.LessonSnapshot.findOrCreate({
-      where: {
-        period,
-        timeId,
-        lessonId,
-      },
-    });
+    const newTeachingCount = Number(weekEndDaySnapshot.teachingCount) - Number(lastSnapshot.teachingCount);
+    const newLearningCount = Number(weekEndDaySnapshot.learningCount) - Number(lastSnapshot.learningCount);
 
-    return await snapshot[0].update({
+    return await this.ctx.model.LessonSnapshot.upsertWithData({
+      period,
+      timeId,
+      lessonId,
       newTeachingCount,
       newLearningCount,
-      teachingCount: Number(lastSnapshot.teachingCount) + Number(newTeachingCount),
-      learningCount: Number(lastSnapshot.learningCount) + Number(newLearningCount),
+      teachingCount: weekEndDaySnapshot.teachingCount,
+      learningCount: weekEndDaySnapshot.learningCount,
     });
   }
 
   async buildMonthlySnapshot(lessonId, time) {
-    const { fn, col } = this.ctx.app.Sequelize;
     const period = 'monthly';
     const timeId = time.id;
+    const monthEndDaySnapshot = await this.ctx.model.LessonSnapshot.findOne({
+      where: {
+        lessonId,
+        timeId: time.monthEndDayId(),
+        period: 'daily',
+      },
+    });
+    if (!monthEndDaySnapshot) {
+      throw new Error('Should build daily snapshot first!');
+    }
     let lastSnapshot = await this.ctx.model.LessonSnapshot.findOne({
       where: {
-        timeId: time.lastMonthId(),
         lessonId,
-        period,
+        timeId: time.lastMonthEndDayId(),
+        period: 'monthly',
       },
     });
     if (!lastSnapshot) {
@@ -151,41 +149,18 @@ class LessonSnapshotService extends Service {
         learningCount: 0,
       };
     }
-    const res = await this.ctx.model.LessonSnapshot.findAll({
-      attributes: [
-        [ fn('SUM', col('newTeachingCount')), 'newTeachingCount' ],
-        [ fn('SUM', col('newLearningCount')), 'newLearningCount' ],
-      ],
-      where: {
-        lessonId,
-        period: 'daily',
-      },
-      include: [{
-        model: this.ctx.model.Time,
-        attributes: [ ],
-        where: {
-          year: time.year,
-          month: time.month,
-        },
-      }],
-      group: [ 'lesson_snapshots.lessonId' ],
-    });
-    const newTeachingCount = res[0].newTeachingCount;
-    const newLearningCount = res[0].newLearningCount;
 
-    const snapshot = await this.ctx.model.LessonSnapshot.findOrCreate({
-      where: {
-        period,
-        timeId,
-        lessonId,
-      },
-    });
+    const newTeachingCount = Number(monthEndDaySnapshot.teachingCount) - Number(lastSnapshot.teachingCount);
+    const newLearningCount = Number(monthEndDaySnapshot.learningCount) - Number(lastSnapshot.learningCount);
 
-    return await snapshot[0].update({
+    return await this.ctx.model.LessonSnapshot.upsertWithData({
+      period,
+      timeId,
+      lessonId,
       newTeachingCount,
       newLearningCount,
-      teachingCount: Number(lastSnapshot.teachingCount) + Number(newTeachingCount),
-      learningCount: Number(lastSnapshot.learningCount) + Number(newLearningCount),
+      teachingCount: monthEndDaySnapshot.teachingCount,
+      learningCount: monthEndDaySnapshot.learningCount,
     });
   }
 }

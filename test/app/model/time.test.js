@@ -96,23 +96,23 @@ describe('test/app/model/time.test.js', () => {
     });
   });
 
-  describe('#lastWeekId', () => {
+  describe('#lastWeekEndDayId', () => {
     it('should return last week id', async () => {
       let day = await ctx.model.Time.getTimeByString('2019-01-06');
-      assert(day.lastWeekId() === '20181230');
+      assert(day.lastWeekEndDayId() === '20181230');
       day = await ctx.model.Time.getTimeByString('2019-01-13');
-      assert(day.lastWeekId() === '20190106');
+      assert(day.lastWeekEndDayId() === '20190106');
     });
   });
 
-  describe('#lastMonthId', () => {
+  describe('#lastMonthEndDayId', () => {
     it('should return last month id', async () => {
       let day = await ctx.model.Time.getTimeByString('2019-01-31');
-      assert(day.lastMonthId() === '20181231');
+      assert(day.lastMonthEndDayId() === '20181231');
       day = await ctx.model.Time.getTimeByString('2019-02-28');
-      assert(day.lastMonthId() === '20190131');
+      assert(day.lastMonthEndDayId() === '20190131');
       day = await ctx.model.Time.getTimeByString('2019-03-31');
-      assert(day.lastMonthId() === '20190228');
+      assert(day.lastMonthEndDayId() === '20190228');
     });
   });
 });
