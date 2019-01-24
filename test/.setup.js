@@ -14,6 +14,7 @@ afterEach(async () => {
     app.model.Package.destroy({ truncate: true, force: true }),
     app.model.Lesson.destroy({ truncate: true, force: true }),
     app.model.Question.destroy({ truncate: true, force: true }),
+    app.model.PackageLesson.destroy({ truncate: true, force: true }),
 
     app.model.PackageFact.destroy({ truncate: true, force: true }),
     app.model.ClassroomFact.destroy({ truncate: true, force: true }),

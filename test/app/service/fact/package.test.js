@@ -42,7 +42,7 @@ describe('test/app/service//fact/package.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
   });
 });

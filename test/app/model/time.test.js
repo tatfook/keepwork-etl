@@ -52,7 +52,7 @@ describe('test/app/model/time.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
 
     it('should raise error if time is NULL', async () => {
@@ -61,7 +61,7 @@ describe('test/app/model/time.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
   });
 

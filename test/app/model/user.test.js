@@ -31,7 +31,7 @@ describe('test/app/model/user.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
   });
 
@@ -58,7 +58,7 @@ describe('test/app/model/user.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
     it('should not update user without id', async () => {
       const data = {
@@ -69,7 +69,7 @@ describe('test/app/model/user.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
   });
 

@@ -32,7 +32,7 @@ describe('test/app/model/question.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
   });
 
@@ -60,7 +60,7 @@ describe('test/app/model/question.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
     it('should not update Question without id', async () => {
       const data = {
@@ -72,7 +72,7 @@ describe('test/app/model/question.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
     it('should not update Question without index', async () => {
       const data = {
@@ -84,7 +84,7 @@ describe('test/app/model/question.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
   });
 

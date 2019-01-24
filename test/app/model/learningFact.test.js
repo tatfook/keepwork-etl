@@ -57,7 +57,7 @@ describe('test/app/model/learningFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
 
     });
 
@@ -73,7 +73,7 @@ describe('test/app/model/learningFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
       error = undefined;
       try {
         await ctx.model.LearningFact.beginLearning({
@@ -85,7 +85,7 @@ describe('test/app/model/learningFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
 
     it('should not create learning fact  with invalid package id', async () => {
@@ -99,7 +99,7 @@ describe('test/app/model/learningFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
       error = undefined;
       try {
         await ctx.model.LearningFact.beginLearning({
@@ -112,7 +112,7 @@ describe('test/app/model/learningFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
 
     it('should not create learning fact with invalid lesson id', async () => {
@@ -126,7 +126,7 @@ describe('test/app/model/learningFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
       error = undefined;
       try {
         await ctx.model.LearningFact.beginLearning({
@@ -139,7 +139,7 @@ describe('test/app/model/learningFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
 
     it('should not create learning fact with invalid time', async () => {
@@ -154,7 +154,7 @@ describe('test/app/model/learningFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
       error = undefined;
       try {
         await ctx.model.LearningFact.beginLearning({
@@ -166,7 +166,7 @@ describe('test/app/model/learningFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
   });
 
@@ -217,7 +217,7 @@ describe('test/app/model/learningFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
 
     it('should not update learning fact with invalid time', async () => {
@@ -229,7 +229,7 @@ describe('test/app/model/learningFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
       error = undefined;
       try {
         await ctx.model.LearningFact.endLearning({
@@ -238,7 +238,7 @@ describe('test/app/model/learningFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
   });
 

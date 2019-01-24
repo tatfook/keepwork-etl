@@ -303,4 +303,59 @@ describe('test/app/service/snapshot/lesson.test.js', () => {
       assert(monthlySnapshot.teachingCount === 59);
     });
   });
+
+  describe('build all snapshot', () => {
+    const day = '2019-01-02';
+    const nextDay = '2019-01-03';
+    beforeEach(async () => {
+      await ctx.service.fact.learning.beginClass({
+        category: 'keepwork',
+        action: 'begin_class',
+        data: {
+          classroomKey: 12345,
+          beginAt: day,
+          teacherId: 123,
+          packageId: 12345,
+          lessonId: 12345,
+        },
+      });
+      await ctx.service.fact.learning.beginClass({
+        category: 'keepwork',
+        action: 'begin_class',
+        data: {
+          classroomKey: 22345,
+          beginAt: day,
+          teacherId: 123,
+          packageId: 12345,
+          lessonId: 12346,
+        },
+      });
+      const time = await ctx.model.Time.getTimeByString(nextDay);
+      await ctx.service.snapshot.lesson.buildAll(time);
+    });
+
+    it('should build snapshots', async () => {
+      const count = await ctx.model.LessonSnapshot.count({ where: { period: 'daily' } });
+      assert(count === 2);
+
+      let l = await ctx.model.Lesson.findOne({ attributes: [ 'id' ] });
+      let dailySnapCount = await ctx.model.LessonSnapshot.count({
+        where: {
+          lessonId: l.id,
+          period: 'daily',
+        },
+      });
+
+      assert(dailySnapCount === 1);
+      l = await ctx.model.Lesson.findOne({ attributes: [ 'id' ], order: [[ 'id', 'desc' ]] });
+      dailySnapCount = await ctx.model.LessonSnapshot.count({
+        where: {
+          lessonId: l.id,
+          period: 'daily',
+        },
+      });
+
+      assert(dailySnapCount === 1);
+    });
+  });
 });

@@ -48,7 +48,7 @@ describe('test/app/model/testQuestionFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
       error = undefined;
       try {
         await ctx.model.Question.createFromEvent({
@@ -60,7 +60,7 @@ describe('test/app/model/testQuestionFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
 
     it('should not create testQuestion fact with invalid question index', async () => {
@@ -75,7 +75,7 @@ describe('test/app/model/testQuestionFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
       error = undefined;
       try {
         await ctx.model.Question.createFromEvent({
@@ -87,7 +87,7 @@ describe('test/app/model/testQuestionFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
 
     it('should not create testQuestion fact with invalid commit time', async () => {
@@ -102,7 +102,7 @@ describe('test/app/model/testQuestionFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
       error = undefined;
       try {
         await ctx.model.Question.createFromEvent({
@@ -114,7 +114,7 @@ describe('test/app/model/testQuestionFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
   });
 });

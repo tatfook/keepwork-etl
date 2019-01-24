@@ -3,8 +3,26 @@
 const Service = require('egg').Service;
 
 class PackageSnapshotService extends Service {
+  async buildAll(day) {
+    if (!day) throw new Error('Invalid params');
+    const limit = 100; // process 100 snapshot per loop
+    let offset = 0;
+    const attributes = [ 'id' ];
+    let res = await this.ctx.model.Package.findAndCount({ attributes, limit, offset });
+    const count = res.count;
+    const packages = res.rows;
+
+    while (offset < count) {
+      await Promise.all(packages.map(p => {
+        return this.ctx.service.snapshot.package.build(p.id, day);
+      }));
+      offset += limit;
+      res = await this.ctx.model.Package.findAndCount({ attributes, limit, offset });
+    }
+  }
+
   async build(packageId, day) {
-    if (!day) day = await this.ctx.model.Time.today();
+    if (!day || !packageId) throw new Error('Invalid params');
     const lastDay = await this.ctx.model.Time.getTimeByString(day.lastDayId());
     await this.service.snapshot.package.buildDailySnapshot(packageId, lastDay);
     if (day.isBeginOfWeek()) {

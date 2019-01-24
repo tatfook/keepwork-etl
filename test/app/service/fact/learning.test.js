@@ -50,7 +50,7 @@ describe('test/app/service/fact/learning.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
   });
 
@@ -92,7 +92,7 @@ describe('test/app/service/fact/learning.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
   });
 
@@ -130,7 +130,7 @@ describe('test/app/service/fact/learning.test.js', () => {
         } catch (e) {
           error = e;
         }
-        assert(error);
+        assert.ok(error);
       });
     });
 
@@ -171,7 +171,7 @@ describe('test/app/service/fact/learning.test.js', () => {
         } catch (e) {
           error = e;
         }
-        assert(error);
+        assert.ok(error);
       });
 
       it('should create test question fact with quiz', async () => {
@@ -243,7 +243,7 @@ describe('test/app/service/fact/learning.test.js', () => {
         } catch (e) {
           error = e;
         }
-        assert(error);
+        assert.ok(error);
       });
 
       it('should create test question fact with quiz', async () => {

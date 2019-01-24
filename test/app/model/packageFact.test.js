@@ -38,7 +38,7 @@ describe('test/app/model/packageFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
     it('should not return package fact with invalid user', async () => {
       try {
@@ -51,7 +51,7 @@ describe('test/app/model/packageFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
       error = undefined;
     });
     it('should not return package fact with invalid package', async () => {
@@ -65,7 +65,7 @@ describe('test/app/model/packageFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
   });
 });

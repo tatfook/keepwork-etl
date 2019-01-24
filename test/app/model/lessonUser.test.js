@@ -30,7 +30,7 @@ describe('test/app/model/lessonUser.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
 
     it('should not create lesson user without user id', async () => {
@@ -42,7 +42,7 @@ describe('test/app/model/lessonUser.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
   });
 
@@ -68,7 +68,7 @@ describe('test/app/model/lessonUser.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
     it('should not update LessonUser without id', async () => {
       const data = {
@@ -79,7 +79,7 @@ describe('test/app/model/lessonUser.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
   });
 

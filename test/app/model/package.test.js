@@ -30,7 +30,7 @@ describe('test/app/model/package.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
 
     it('should not create package without user id', async () => {
@@ -42,7 +42,7 @@ describe('test/app/model/package.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
   });
 
@@ -68,7 +68,7 @@ describe('test/app/model/package.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
     it('should not update Package without id', async () => {
       const data = {
@@ -79,7 +79,7 @@ describe('test/app/model/package.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
   });
 

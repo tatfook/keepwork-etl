@@ -45,7 +45,7 @@ describe('test/app/model/classroomFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
       error = undefined;
       try {
         await ctx.model.ClassroomFact.beginClass({
@@ -57,7 +57,7 @@ describe('test/app/model/classroomFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
 
     it('should failed with invalid teacher id', async () => {
@@ -72,7 +72,7 @@ describe('test/app/model/classroomFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
       error = undefined;
       try {
         await ctx.model.ClassroomFact.beginClass({
@@ -84,7 +84,7 @@ describe('test/app/model/classroomFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
 
     it('should failed with invalid package id', async () => {
@@ -99,7 +99,7 @@ describe('test/app/model/classroomFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
       error = undefined;
       try {
         await ctx.model.ClassroomFact.beginClass({
@@ -111,7 +111,7 @@ describe('test/app/model/classroomFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
 
     it('should failed with invalid lesson id', async () => {
@@ -126,7 +126,7 @@ describe('test/app/model/classroomFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
       error = undefined;
       try {
         await ctx.model.ClassroomFact.beginClass({
@@ -138,7 +138,7 @@ describe('test/app/model/classroomFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
 
     it('should failed with invalid classroomKey', async () => {
@@ -152,7 +152,7 @@ describe('test/app/model/classroomFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
   });
 
@@ -185,7 +185,7 @@ describe('test/app/model/classroomFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
 
     it('should failed with invalid classroomKey', async () => {
@@ -196,7 +196,7 @@ describe('test/app/model/classroomFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
   });
 
@@ -244,7 +244,7 @@ describe('test/app/model/classroomFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
 
     it('should failed with invalid classroomKey', async () => {
@@ -255,7 +255,7 @@ describe('test/app/model/classroomFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
   });
 
@@ -291,7 +291,7 @@ describe('test/app/model/classroomFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
       error = undefined;
       try {
         await ctx.model.ClassroomFact.endClass({
@@ -301,7 +301,7 @@ describe('test/app/model/classroomFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
 
     it('should failed with invalid classroomKey', async () => {
@@ -313,7 +313,7 @@ describe('test/app/model/classroomFact.test.js', () => {
       } catch (e) {
         error = e;
       }
-      assert(error);
+      assert.ok(error);
     });
   });
 });

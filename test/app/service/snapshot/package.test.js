@@ -15,6 +15,10 @@ describe('test/app/service/snapshot/package.test.js', () => {
       id: 12345,
       userId: 123,
     });
+    await app.model.Package.createFromEvent({
+      id: 12346,
+      userId: 123,
+    });
     await app.model.Lesson.createFromEvent({
       id: 12345,
       userId: 123,
@@ -230,6 +234,61 @@ describe('test/app/service/snapshot/package.test.js', () => {
       });
       assert(monthlySnapshot.newTeachingCount === 28);
       assert(monthlySnapshot.teachingCount === 59);
+    });
+  });
+
+  describe('build all snapshot', () => {
+    const day = '2019-01-09';
+    const nextDay = '2019-01-10';
+    beforeEach(async () => {
+      await ctx.service.fact.learning.beginClass({
+        category: 'keepwork',
+        action: 'begin_class',
+        data: {
+          classroomKey: 12345,
+          beginAt: day,
+          teacherId: 123,
+          packageId: 12345,
+          lessonId: 12345,
+        },
+      });
+      await ctx.service.fact.learning.beginClass({
+        category: 'keepwork',
+        action: 'begin_class',
+        data: {
+          classroomKey: 22345,
+          beginAt: day,
+          teacherId: 123,
+          packageId: 12346,
+          lessonId: 12345,
+        },
+      });
+      const time = await ctx.model.Time.getTimeByString(nextDay);
+      await ctx.service.snapshot.package.buildAll(time);
+    });
+
+    it('should build snapshots', async () => {
+      const count = await ctx.model.PackageSnapshot.count({ where: { period: 'daily' } });
+      assert(count === 2);
+
+      let p = await ctx.model.Package.findOne({ attributes: [ 'id' ] });
+      let dailySnapCount = await ctx.model.PackageSnapshot.count({
+        where: {
+          packageId: p.id,
+          period: 'daily',
+        },
+      });
+
+      assert(dailySnapCount === 1);
+      p = await ctx.model.Package.findOne({ attributes: [ 'id' ], order: [[ 'id', 'desc' ]] });
+      dailySnapCount = await ctx.model.PackageSnapshot.count({
+        where: {
+          packageId: p.id,
+          period: 'daily',
+        },
+      });
+
+      assert(dailySnapCount === 1);
     });
   });
 });
